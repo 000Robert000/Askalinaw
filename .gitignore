@@ -1,0 +1,10 @@
+# never commit secrets or generated config
+.env
+*.env
+!.env.example
+librechat/librechat.yaml
+eval-results.csv
+*.pem
+*.key
+__pycache__/
+.DS_Store

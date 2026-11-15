@@ -1,0 +1,54 @@
+# Askalinaw — LibreChat configuration TEMPLATE.
+# Do not edit librechat.yaml directly: scripts/build-config.py fills in
+# the HANDBOOK placeholder from the copy of the handbook stored in S3 and writes librechat.yaml.
+version: 1.2.1
+cache: true
+
+# Uploaded files go to S3 instead of the server disk (AWS integration).
+fileStrategy: "s3"
+
+interface:
+  customWelcome: "Kumusta! I'm Askalinaw, the Kalinaw University student help desk. Ask me about offices, enrollment, IDs, the library or IT services."
+  privacyPolicy:
+    externalUrl: "https://REPLACE-WITH-YOUR-WEBSITE/system.html"
+    openNewTab: true
+  termsOfService:
+    externalUrl: "https://REPLACE-WITH-YOUR-WEBSITE/system.html"
+    openNewTab: true
+  endpointsMenu: false
+  modelSelect: false
+  parameters: false
+  presets: false
+  sidePanel: true
+  bookmarks: true
+  prompts: false
+  agents: false
+
+registration:
+  socialLogins: []
+
+modelSpecs:
+  enforce: true
+  prioritize: true
+  list:
+    - name: "askalinaw-helpdesk"
+      label: "Askalinaw Help Desk"
+      description: "Answers questions about Kalinaw University offices, enrollment, IDs, library and IT."
+      default: true
+      preset:
+        endpoint: "google"
+        model: "{{MODEL}}"
+        modelLabel: "Askalinaw"
+        greeting: "Ask me anything about Kalinaw University campus services."
+        temperature: 0.2
+        promptPrefix: |
+          You are Askalinaw, the student help desk assistant of Kalinaw University (a fictional university).
+          Rules:
+          - Answer ONLY from the HANDBOOK below. If the answer is not in the handbook, say:
+            "I don't have that information. Please ask the Office of Student Affairs (Silang Building, 2nd floor)."
+          - Never decide grades, scholarships, discipline, admissions or anything about a specific person.
+          - Never give medical, mental-health or legal advice; refer to the Clinic or Guidance Office.
+          - Keep answers short: office, room, hours, fee, steps.
+          - Do not ask users for personal information.
+          HANDBOOK (version {{HANDBOOK_VERSION}}):
+{{HANDBOOK}}

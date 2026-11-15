@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Askalinaw — Monitoring, backup and security</title><link rel="stylesheet" href="style.css"></head>
+<body><main>
+<h1>Monitoring, backup and restore, security</h1>
+
+<h2 id="monitoring">Monitoring</h2>
+<figure><img src="img/e06-dashboard.png" alt="CloudWatch dashboard"><figcaption>E-06 · CloudWatch dashboard "Askalinaw", FILL-IN date/time range. Requests, errors, response time, CPU, disk, memory, site-up and backup status, plus the latest requests.</figcaption></figure>
+<p><b>Why these thresholds:</b> we used the brief's starter values. 85% CPU or disk leaves time to act before failure,
+and 3 seconds is about how long a person waits for an answer to start before they think it's broken.</p>
+
+<table>
+<tr><th>Alarm</th><th>Fires when</th><th>What we do</th></tr>
+<tr><td>askalinaw-cpu-high</td><td>CPU &gt; 85% for 10 min</td><td>Look for a stuck process or a loop</td></tr>
+<tr><td>askalinaw-status-check</td><td>EC2 status check fails</td><td>Check / reboot the instance</td></tr>
+<tr><td>askalinaw-disk-high</td><td>Disk &gt; 85%</td><td><a href="incident.html#runbook">Disk-full runbook</a></td></tr>
+<tr><td>askalinaw-memory-high</td><td>Memory &gt; 90% for 5 min</td><td>Check containers with <code>docker stats</code></td></tr>
+<tr><td>askalinaw-http-5xx</td><td>Any 5xx response</td><td>Check app logs</td></tr>
+<tr><td>askalinaw-slow-responses</td><td>Average response &gt; 3 s over 5 min</td><td>Check model latency vs server load</td></tr>
+<tr><td>askalinaw-site-down</td><td>Health check can't load the site twice</td><td>Check Caddy and containers</td></tr>
+<tr><td>askalinaw-answers-failed</td><td>3 wrong/failed answers in 15 min</td><td>System is up but not useful: check the Gemini key/quota and the handbook</td></tr>
+<tr><td>askalinaw-empty-answer</td><td>Any empty answer</td><td>Content missing or model blocked</td></tr>
+<tr><td>askalinaw-backup-failed</td><td>Nightly backup failed</td><td>Run <code>backup.sh</code> by hand, read its log</td></tr>
+</table>
+<figure><img src="img/e07-alarms.png" alt="CloudWatch alarms list"><figcaption>E-07 · All alarms, all sending to SNS topic askalinaw-alerts (both our emails).</figcaption></figure>
+<figure><img src="img/e08-alert-email.png" alt="Alarm email"><figcaption>E-08 · Alert received by FILL-IN at FILL-IN date/time.</figcaption></figure>
+<p><b>Request logging:</b> Caddy writes one JSON line per request (time, method, path, status, duration), shipped to
+<code>/askalinaw/access</code> (14-day retention). LibreChat's own log, which includes the question text and errors, goes to
+<code>/askalinaw/app</code>. The version that answered is the git commit, set as <code>APP_VERSION</code> at deploy. The health check
+also records the model's answer time.</p>
+<figure><img src="img/e09-request-log.png" alt="Request log sample"><figcaption>E-09 · Logs Insights query on the request log, FILL-IN date.</figcaption></figure>
+
+<h2 id="backup">Backup and restore</h2>
+<p><b>What we would need to restore to get the system back:</b></p>
+<ol>
+<li>The <b>MongoDB database</b>: users, conversations, messages. Nightly <code>mongodump</code> to <code>s3://…/backups/mongo/</code>.</li>
+<li>The <b>handbook content</b> in S3: versioned bucket, so old versions can be recovered.</li>
+<li><b>Uploaded files</b> in S3: same versioned bucket.</li>
+<li><b>Configuration</b>: <code>librechat.yaml</code> and the compose override, backed up nightly and also rebuilt from git.</li>
+<li><b>Secrets</b>: in Parameter Store, which is outside the server, so they survive losing it.</li>
+<li><b>The server itself</b>: rebuilt by <code>infra/01-create-aws.sh</code> plus <code>infra/02-server-setup.sh</code>.</li>
+</ol>
+<p>We run MongoDB in a container, not RDS, so the brief's option is "a scheduled dump to S3 kept at least 7 days". Ours are kept 14.</p>
+<figure><img src="img/e10-backups.png" alt="Backups in S3"><figcaption>E-10 · Nightly dumps in S3, and bucket versioning enabled.</figcaption></figure>
+<figure><img src="img/e11-restore.png" alt="Restore test output"><figcaption>E-11 · Restore test on FILL-IN-DATE: counts before → empty → after restore, then a successful login to an old conversation.</figcaption></figure>
+<p><b>RPO and RTO.</b> We could lose up to <b>24 hours</b> of conversations, because backups run nightly. Measured: getting the database
+back from S3 took <b>FILL-IN seconds</b>; rebuilding the whole server from scratch and restoring would take about <b>FILL-IN minutes</b>.</p>
+
+<h2 id="security">Security</h2>
+<table>
+<tr><th>Problem at baseline</th><th>What we did</th><th>Risk it addresses</th></tr>
+<tr><td>Shared/unprotected console logins</td><td>Each of us has our own IAM user with MFA</td><td>A stolen password alone can't get into the account, and we can tell who did what.</td></tr>
+<tr><td>Keys in a plain .env file</td><td>All secrets in Parameter Store (SecureString), written to an <code>.env</code> with chmod 600 on the server at start-up; git history checked</td><td>Keys can't leak through GitHub, screenshots or a copied folder.</td></tr>
+<tr><td>SSH open to the internet</td><td>No port 22, no key pair; shell through Session Manager</td><td>Removes the most-scanned door on the internet.</td></tr>
+<tr><td>Database reachable?</td><td>MongoDB is only on Docker's internal network; security group allows 80/443 only</td><td>Nobody outside can talk to the database.</td></tr>
+<tr><td>Server with broad permissions</td><td>EC2 role can read only its own bucket and <code>/askalinaw/*</code> parameters, and write only its own metrics</td><td>If the server is hacked, the damage stays inside our project.</td></tr>
+<tr><td>No HTTPS</td><td>Caddy + Let's Encrypt</td><td>Passwords and chats are encrypted in transit.</td></tr>
+<tr><td>No audit trail</td><td>CloudTrail event history</td><td>We can see who changed what, and when.</td></tr>
+<tr><td>Unencrypted storage</td><td>Encrypted EBS volume; S3 default encryption; public access blocked</td><td>A lost disk or snapshot can't be read.</td></tr>
+<tr><td>Personal data to a third party</td><td>All data invented; prompt tells the assistant not to ask for personal info</td><td>Nothing personal reaches Google.</td></tr>
+<tr><td>Gemini key scope</td><td>Key restricted to the Generative Language API in Google AI Studio, deleted at end of term</td><td>A leaked key can't be used for other Google services.</td></tr>
+</table>
+<figure><img src="img/e12-mfa.png" alt="IAM users with MFA"><figcaption>E-12 · IAM users with MFA.</figcaption></figure>
+<figure><img src="img/e13-parameters.png" alt="Parameter Store"><figcaption>E-13 · Secrets in Parameter Store (values hidden).</figcaption></figure>
+<figure><img src="img/sg.png" alt="Security group"><figcaption>Security group: inbound 80 and 443 only.</figcaption></figure>
+</main><script src="nav.js"></script></body></html>

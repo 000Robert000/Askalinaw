@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Askalinaw — Executive summary</title><link rel="stylesheet" href="style.css"></head>
+<body><main>
+<h1>Askalinaw: a campus help desk that we run properly</h1>
+
+<div class="video"><iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Askalinaw presentation" allowfullscreen></iframe></div>
+<p><small>Presentation video (5–8 min), presented by Robert Santiago and Ivan Ray Dequiros.</small></p>
+
+<h2>What the system does</h2>
+<p>Askalinaw is a chat assistant for students of <b>Kalinaw University</b>, a university we invented for this
+project. Students type questions like "Where do I pay my tuition?" or "I lost my ID, what do I do?" and the
+assistant answers from a short handbook of campus offices, enrollment dates, fees and rules. It only gives
+information. It never decides anything about a person, such as grades, scholarships or discipline.</p>
+<p>It is built on <b>LibreChat</b>, a free, open-source ChatGPT-style app, which we renamed, re-coloured and
+filled with our own content. The answers come from Google's Gemini model (free tier). Everything else
+(the server, database backups, file storage, secrets, monitoring and alerts) runs in Amazon Web Services (AWS),
+and that is what this project is really about.</p>
+<p>Live system: <a href="https://FILL-IN.sslip.io">https://FILL-IN.sslip.io</a></p>
+
+<h2>What was wrong with how it was run</h2>
+<p>Out of the box, LibreChat is a program you start on one computer and hope for the best. There is no warning
+when it breaks, no copy of the data if the disk dies, secrets sit in a plain text file, and logs grow until the disk fills up.
+See <a href="baseline.html">Baseline</a>.</p>
+
+<h2>What we changed</h2>
+<ul>
+<li><b>We can see it:</b> a dashboard, FILL-IN alarms that email both of us, and a log line for every request.</li>
+<li><b>We can recover it:</b> a nightly database backup to S3, versioned content, and a restore we actually tested (FILL-IN seconds).</li>
+<li><b>It's locked down:</b> MFA, own logins, no SSH port, secrets in Parameter Store, least-privilege permissions, encrypted disk.</li>
+<li><b>It looks after itself:</b> two automations (nightly backup, 5-minute health and answer check) that run with nobody touching them.</li>
+<li><b>We broke it on purpose:</b> filled the disk, got alerted in FILL-IN minutes, fixed it, found the root cause, and added prevention.</li>
+</ul>
+
+<h2>What improved</h2>
+<table>
+<tr><th>Measure</th><th>Before</th><th>After</th></tr>
+<tr><td>Time to notice a full disk</td><td>Never (no alerts)</td><td>FILL-IN min</td></tr>
+<tr><td>Data lost if the server dies</td><td>Everything</td><td>At most 24 h (nightly backup)</td></tr>
+<tr><td>Security problems found</td><td>FILL-IN</td><td>FILL-IN fixed</td></tr>
+<tr><td>Answer quality</td><td>Not measured</td><td>FILL-IN / 30 correct</td></tr>
+<tr><td>Cost per day</td><td>FILL-IN</td><td>FILL-IN</td></tr>
+</table>
+<p>Full numbers with dates: <a href="results.html">Results</a>.</p>
+</main><script src="nav.js"></script></body></html>

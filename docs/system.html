@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Askalinaw — System and system card</title><link rel="stylesheet" href="style.css"></head>
+<body><main>
+<h1>Our system, and the system card</h1>
+
+<h2>Before and after the reskin</h2>
+<figure><img src="img/e05-original.png" alt="Stock LibreChat"><figcaption>E-05 · The original LibreChat, run locally on FILL-IN-DATE.</figcaption></figure>
+<figure><img src="img/e01-askalinaw.png" alt="Askalinaw answering a question"><figcaption>E-01/E-02 · Askalinaw at https://FILL-IN.sslip.io on FILL-IN-DATE, answering a real question.</figcaption></figure>
+
+<h1>SYSTEM CARD: Askalinaw</h1>
+
+<h2>1. What it does</h2>
+<p>Askalinaw answers students' everyday questions about Kalinaw University (a fictional university): which office handles what, where it is, opening hours, enrollment dates, fees and simple procedures. It answers only from a short handbook we wrote, and says so when it doesn't know.</p>
+
+<h2>2. Who uses it, and who must not</h2>
+<ul>
+<li><b>Intended users:</b> students and visitors who need campus information.</li>
+<li><b>Explicitly NOT for:</b> grades, scholarship eligibility, admissions, discipline, or any decision about an identifiable person; medical, mental-health or legal advice; looking up anyone's records.</li>
+</ul>
+
+<h2>3. Base system</h2>
+<ul>
+<li><b>Name and version:</b> LibreChat, commit FILL-IN (from <code>/opt/askalinaw-librechat-commit.txt</code>)</li>
+<li><b>Source URL:</b> <a href="https://github.com/LibreChat-AI/LibreChat">github.com/LibreChat-AI/LibreChat</a></li>
+<li><b>Author:</b> Danny Avila and contributors</li>
+<li><b>Licence:</b> <a href="https://github.com/LibreChat-AI/LibreChat/blob/main/LICENSE">MIT</a>: commercial and modified use allowed as long as the copyright notice is kept, which is why we credit it here and in our footer.</li>
+<li><b>What it did originally:</b> a general-purpose ChatGPT-style interface where the user picks any AI provider and model and chats about anything.</li>
+</ul>
+
+<h2>4. What we changed (the reskin)</h2>
+<table>
+<tr><th>Part</th><th>Original</th><th>Ours</th><th>Why</th></tr>
+<tr><td>Name/branding</td><td>"LibreChat", LibreChat logo, default colours</td><td>"Askalinaw", our own wave-in-a-speech-bubble logo, green and gold theme, our footer</td><td>A stranger should not recognise it as LibreChat.</td></tr>
+<tr><td>Data/content</td><td>None: a blank general chat</td><td>Our invented Kalinaw University handbook (offices, enrollment, IDs, library, IT, documents)</td><td>The assistant should know our world and nothing personal.</td></tr>
+<tr><td>Wording/prompts</td><td>"How can I help you today?", any topic</td><td>Help-desk welcome in Taglish ("Kumusta!"), a fixed system prompt: answer only from the handbook, refuse decisions about people, refer to the right office</td><td>Domain language, and safe behaviour.</td></tr>
+<tr><td>Interface</td><td>Model picker, presets, agents, parameters, many providers</td><td>One locked "Askalinaw Help Desk" option; model picker, presets, agents and parameters hidden</td><td>Students shouldn't have to choose an AI model, and they can't remove the rules.</td></tr>
+<tr><td>AWS services</td><td>None (runs anywhere)</td><td>Handbook read from S3; uploads stored in S3; secrets in Parameter Store; alerts through SNS; backups to S3</td><td>Required: a real AWS integration beyond hosting.</td></tr>
+</table>
+
+<h2>5. Data</h2>
+<ul>
+<li><b>Where it came from:</b> written by us for this project (<code>content/kalinaw-handbook.md</code>), so no licence issue.</li>
+<li><b>Size and format:</b> one Markdown file, about 3.5 KB (FILL-IN exact), stored in S3 with versioning.</li>
+<li><b>Anything personal in it:</b> no. All invented. No real names, students, staff or records.</li>
+<li><b>Sent to a third-party AI service:</b> each question plus the handbook goes to Google Gemini (free tier, which Google may use to improve its products). This is why everything is invented and the assistant never asks for personal details. Test accounts use made-up names.</li>
+</ul>
+
+<h2>6. How good it is</h2>
+<ul>
+<li><b>The one number:</b> FILL-IN / 30 correct (FILL-IN %), measured on FILL-IN-DATE.</li>
+<li><b>How we measured it:</b> <code>scripts/evaluate.py</code> sends 30 labelled questions to the same model with the same instructions, and checks each answer for the expected fact (e.g. "Mabini" for the Registrar's location) or, for 5 out-of-scope questions, that it declines and refers to the right office.</li>
+<li><b>What they covered:</b> offices (8), enrollment (5), IDs (3), library (3), IT (3), documents (3), should-refuse (5).</li>
+<li><b>An example it gets wrong:</b> FILL-IN, copied from <code>eval-results.csv</code>.</li>
+<li><b>Limit of the measurement:</b> keyword matching can pass a muddled answer that contains the right word, and fail a correct answer phrased differently. We read every FAIL by hand.</li>
+</ul>
+
+<h2>7. How it is served</h2>
+<ul>
+<li><b>Where it runs:</b> one EC2 t3.medium, Amazon Linux 2023, ap-southeast-1, in Docker.</li>
+<li><b>What calls it:</b> browsers at https://FILL-IN.sslip.io (LibreChat web UI and its <code>/api</code> paths).</li>
+<li><b>The model behind it:</b> Google <code>gemini-2.5-flash</code>, free tier API key (not hosted by us).</li>
+<li><b>If the model is unavailable:</b> the chat shows an error message; the health check marks <code>AnswersFailed</code> and after 3 failed checks the <code>askalinaw-answers-failed</code> alarm emails us. The rest of the site (history, login) keeps working.</li>
+</ul>
+
+<h2>8. Limitations and risks</h2>
+<ul>
+<li><b>Cannot:</b> know anything outside the handbook, see real records, book appointments, or take payments. It can still be confidently wrong if the model misreads the handbook.</li>
+<li><b>Data risks:</b> if someone edits the handbook in S3 with wrong fees, the assistant repeats them (S3 versioning lets us roll back). If the handbook is empty, deployment refuses to start and the empty-answer alarm fires.</li>
+<li><b>Misuse:</b> users may type personal or sensitive details into the chat. These are stored in our database and sent to Google, so the welcome text and this card say not to.</li>
+<li><b>Users must always check:</b> fees, deadlines and requirements with the actual office before acting.</li>
+</ul>
+
+<h2>9. Operational summary</h2>
+<ul>
+<li><b>Code:</b> github.com/FILL-IN/askalinaw</li>
+<li><b>Backups:</b> MongoDB and config to S3 every night at 02:00 Manila time, kept 14 days; handbook versioned in S3.</li>
+<li><b>Healthy when:</b> no <code>askalinaw-*</code> alarms are in ALARM state (see <a href="operations.html">Monitoring</a>).</li>
+<li><b>Contact:</b> Robert Santiago, Ivan Ray Dequiros (SAM10).</li>
+</ul>
+
+<h2>Three test questions</h2>
+<p>See <a href="results.html#tests">Results</a>.</p>
+</main><script src="nav.js"></script></body></html>

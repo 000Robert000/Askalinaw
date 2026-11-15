@@ -1,0 +1,16 @@
+/* Askalinaw colour scheme: deep green + gold. Injected by scripts/apply-branding.sh */
+:root {
+  --askk-green: #0F5C4D;
+  --askk-green-light: #E6F2EF;
+  --askk-gold: #F2C14E;
+}
+button.btn-primary, .btn-primary, button[type="submit"] {
+  background-color: var(--askk-green) !important;
+  border-color: var(--askk-green) !important;
+}
+nav, .nav, [data-testid="nav"] {
+  background-color: var(--askk-green-light) !important;
+}
+a { color: var(--askk-green); }
+h1, h2 { color: var(--askk-green); }
+::selection { background: var(--askk-gold); }

@@ -1,0 +1,31 @@
+# Copied into the LibreChat checkout as docker-compose.override.yml.
+# Adds: our config, our branding, log rotation, and tags every log line with the version.
+services:
+  api:
+    volumes:
+      - type: bind
+        source: ./librechat.yaml
+        target: /app/librechat.yaml
+      - ./askalinaw-branding/logo.svg:/app/client/dist/assets/logo.svg
+      - ./askalinaw-branding/askalinaw.css:/app/client/dist/assets/askalinaw.css
+      # index.html with the CSS link added - created by scripts/apply-branding.sh
+      - ./askalinaw-branding/index.html:/app/client/dist/index.html
+    environment:
+      - APP_VERSION=askalinaw-${ASKALINAW_VERSION:-dev}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+  mongodb:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+  meilisearch:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

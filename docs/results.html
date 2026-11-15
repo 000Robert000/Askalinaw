@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Askalinaw — Results and next steps</title><link rel="stylesheet" href="style.css"></head>
+<body><main>
+<h1>Results</h1>
+
+<h2>Before and after</h2>
+<p>"Before" is the stock setup described on <a href="baseline.html">Baseline</a>. "After" is the finished system. Every number has its date range next to it.</p>
+<table>
+<tr><th>Measure</th><th>Before</th><th>After</th><th>How measured · dates</th></tr>
+<tr><td>Reachable by others</td><td>No (localhost)</td><td>Yes, HTTPS</td><td>Browser check · FILL-IN</td></tr>
+<tr><td>Uptime seen by health check</td><td>Not measured</td><td>FILL-IN % of checks OK</td><td>SiteDown metric · FILL-IN to FILL-IN</td></tr>
+<tr><td>Answer quality</td><td>Not measured; a generic bot can't answer campus questions</td><td>FILL-IN / 30</td><td>evaluate.py · FILL-IN</td></tr>
+<tr><td>Average model answer time</td><td>Not measured</td><td>FILL-IN ms</td><td>AnswerLatencyMs · FILL-IN to FILL-IN</td></tr>
+<tr><td>Time to detect full disk</td><td>Never</td><td>FILL-IN min</td><td>INC-01 · FILL-IN</td></tr>
+<tr><td>Data we could lose (RPO)</td><td>Everything</td><td>≤ 24 h</td><td>Backup schedule</td></tr>
+<tr><td>Time to restore DB (RTO)</td><td>Impossible</td><td>FILL-IN s</td><td>restore-test.sh · FILL-IN</td></tr>
+<tr><td>Security problems open</td><td>6</td><td>FILL-IN</td><td>Security table</td></tr>
+<tr><td>Cost</td><td>USD 0 (laptop)</td><td>USD FILL-IN / day</td><td>Cost Explorer, tag Team · FILL-IN to FILL-IN</td></tr>
+</table>
+<figure><img src="img/graph-latency.png" alt="Graph"><figcaption>Graph: FILL-IN, e.g. AnswerLatencyMs and SiteDown over FILL-IN to FILL-IN (export from the CloudWatch dashboard).</figcaption></figure>
+<figure><img src="img/e16-cost.png" alt="Cost Explorer"><figcaption>E-16 · Cost Explorer, tag Team=Santiago-Dequiros, FILL-IN to FILL-IN.</figcaption></figure>
+
+<h2 id="tests">Three test questions (E-03)</h2>
+<table>
+<tr><th>#</th><th>Question</th><th>Answer (copied from the system)</th><th>Verdict</th></tr>
+<tr><td>1</td><td>Where is the Registrar's Office and when is it open?</td><td>FILL-IN</td><td>FILL-IN</td></tr>
+<tr><td>2</td><td>Will I qualify for the academic scholarship? My GWA is 1.5.</td><td>FILL-IN (it should refuse and refer to the Scholarship Committee)</td><td>FILL-IN</td></tr>
+<tr><td>3</td><td>FILL-IN: a question it got WRONG in evaluate.py</td><td>FILL-IN</td><td>Fail, because FILL-IN</td></tr>
+</table>
+
+<h2>Quality measurement (E-04)</h2>
+<p><b>FILL-IN / 30 correct</b> on FILL-IN-DATE, using <code>scripts/evaluate.py</code> (30 labelled questions, 25 answerable plus 5 that must be refused).</p>
+<figure><img src="img/e04-eval.png" alt="Evaluation output"><figcaption>E-04 · evaluate.py output.</figcaption></figure>
+
+<h1>What we would do next</h1>
+<ol>
+<li><b>Move the database off the server</b> (DocumentDB or MongoDB Atlas) and run the app in an Auto Scaling group of one. This fixes our biggest Reliability gap.</li>
+<li><b>Deploy automatically from GitHub</b> (GitHub Actions running <code>deploy.sh</code> through SSM Run Command) so every change is tested and logged.</li>
+<li><b>Close open registration</b>: invite-only accounts or campus email domain only.</li>
+<li><b>Run evaluate.py nightly</b> and alarm if the score drops, so handbook edits can't silently break answers.</li>
+<li><b>Stop the server outside class hours</b> with an EventBridge schedule, roughly halving cost and footprint.</li>
+</ol>
+</main><script src="nav.js"></script></body></html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Askalinaw — Automation and incident</title><link rel="stylesheet" href="style.css"></head>
+<body><main>
+<h1>Automation and the incident</h1>
+
+<h2>Two automations</h2>
+<table>
+<tr><th></th><th>1 · Nightly backup</th><th>2 · Health and answer check</th></tr>
+<tr><td>Script</td><td><code>scripts/backup.sh</code></td><td><code>scripts/healthcheck.sh</code> + <code>ask_model.py</code></td></tr>
+<tr><td>Schedule</td><td>cron, 02:00 Manila every night</td><td>cron, every 5 minutes</td></tr>
+<tr><td>What it does</td><td>Dumps MongoDB, archives config, uploads both to S3, reports BackupFailed 0/1</td><td>Loads the site, asks the model a question with a known answer, reports SiteDown, AnswersFailed, EmptyAnswer, AnswerLatencyMs</td></tr>
+<tr><td>Ran unattended at</td><td>FILL-IN, FILL-IN, FILL-IN</td><td>FILL-IN first … FILL-IN last (FILL-IN runs)</td></tr>
+</table>
+<figure><img src="img/e14-automation.png" alt="Automation log"><figcaption>E-14 · <code>/askalinaw/automation</code> log: timestamped lines from both jobs on different days, with nobody logged in.</figcaption></figure>
+<p>Deploy instructions are in the repository <code>README.md</code>.</p>
+
+<h2>Incident INC-01: the disk filled up</h2>
+<table>
+<tr><th>When (Manila time)</th><th>What happened</th></tr>
+<tr><td>FILL-IN</td><td><b>Started:</b> a runaway "chat debug log" began writing 1 GB every 30 s (fault injected with <code>fault/fill-disk.sh</code>).</td></tr>
+<tr><td>FILL-IN</td><td><b>Noticed:</b> email "ALARM: askalinaw-disk-high".</td></tr>
+<tr><td>FILL-IN</td><td>Site: FILL-IN (e.g. new messages fail to save, "Something went wrong").</td></tr>
+<tr><td>FILL-IN</td><td><b>Fixed:</b> log truncated, app restarted, test question answered correctly.</td></tr>
+</table>
+<p><b>Time to detect:</b> FILL-IN min. <b>Time to fix:</b> FILL-IN min (from alarm to working).</p>
+
+<h3>Investigation</h3>
+<figure><img src="img/e15-df.png" alt="df output"><figcaption>E-15 · <code>df -h /</code> at 98%.</figcaption></figure>
+<figure><img src="img/e15-du.png" alt="du output"><figcaption>E-15 · <code>du</code> pointing to /var/log/askalinaw/chat-debug.log.</figcaption></figure>
+
+<h3>Root cause</h3>
+<p>The disk filled because a debug log under <code>/var/log/askalinaw/</code> had <b>no log rotation or size limit</b>. It grew until the
+30 GB root disk was full. MongoDB then could not write, so LibreChat could not save messages or sessions, and users got errors.
+Restarting alone would not have helped: the file would still be there.</p>
+
+<h3>Prevention, and proof it works</h3>
+<ul>
+<li><b>Log rotation</b> (<code>infra/logrotate-askalinaw</code>): every log in our folders is capped at 50 MB × 3, checked hourly. Docker container logs were already capped at 10 MB × 3.</li>
+<li><b>Alarm on the root-cause metric</b>: <code>askalinaw-disk-high</code> at 85% gave us warning before 100%.</li>
+<li><b>Verified:</b> FILL-IN, e.g. "wrote a 200 MB test log, ran <code>logrotate -f</code>, the file was rotated and compressed" plus a screenshot.</li>
+</ul>
+
+<h2 id="runbook">Runbook: Server disk full</h2>
+<p>The full runbook is <a href="https://github.com/FILL-IN/askalinaw/blob/main/fault/RUNBOOK-disk-full.md">fault/RUNBOOK-disk-full.md</a>. Last tested FILL-IN-DATE, takes about 15 minutes.</p>
+<pre>
+1. WHAT IT IS FOR   Get Askalinaw working again when the root disk is full, and stop it refilling.
+2. YOU NEED IT WHEN Email "ALARM: askalinaw-disk-high"; users can't save chats.   Check: df -h /
+3. AFFECTS          Everyone. New messages and logins fail.
+4. DO IT            sudo -i
+                    du -xh / --max-depth=2 | sort -rh | head -15     -> find the big file
+                    lsof +L1                                         -> deleted-but-open files?
+                    truncate -s 0 /var/log/askalinaw/chat-debug.log -> df -h / back to normal
+                    cd /opt/LibreChat && docker compose restart api mongodb
+                    install log rotation (runbook step 6)
+5. CHECK            df &lt; 85% · test question answered · disk alarm back to OK · no alarms for 10 min
+6. UNDO             truncation only loses that log; if the DB is damaged run scripts/restore-test.sh
+7. GOTCHAS          rm on an open log doesn't free space - use truncate
+</pre>
+</main><script src="nav.js"></script></body></html>

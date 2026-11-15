@@ -1,0 +1,19 @@
+# Caddy gives free automatic HTTPS (Let's Encrypt) for <elastic-ip>.sslip.io
+# Replace the hostname with yours, e.g. 13-250-10-20.sslip.io
+{
+	email REPLACE-WITH-TEAM-EMAIL
+}
+
+REPLACE-WITH-IP.sslip.io {
+	reverse_proxy localhost:3080
+	encode gzip
+
+	# One JSON line per request: method, uri, status, duration -> CloudWatch
+	log {
+		output file /var/log/caddy/access.log {
+			roll_size 20mb
+			roll_keep 5
+		}
+		format json
+	}
+}

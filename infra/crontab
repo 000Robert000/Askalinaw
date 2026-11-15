@@ -1,0 +1,10 @@
+# Installed with:  sudo crontab /opt/askalinaw/infra/crontab
+# Server clock is UTC. 18:00 UTC = 02:00 Manila.
+SHELL=/bin/bash
+PATH=/usr/local/bin:/usr/bin:/bin
+
+# Automation 1: nightly backup of MongoDB + config to S3
+0 18 * * *  /opt/askalinaw/scripts/backup.sh       >> /var/log/askalinaw/cron.log 2>&1
+
+# Automation 2: health + answer check every 5 minutes
+*/5 * * * * /opt/askalinaw/scripts/healthcheck.sh  >> /var/log/askalinaw/cron.log 2>&1

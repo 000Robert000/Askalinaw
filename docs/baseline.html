@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Askalinaw — Baseline</title><link rel="stylesheet" href="style.css"></head>
+<body><main>
+<h1>Baseline: the environment before we touched it</h1>
+<p>Our starting point was stock LibreChat, set up the way its quick-start describes, on Ivan's laptop on FILL-IN-DATE
+(<a href="system.html">screenshot E-05</a>). This is what "running it" looked like before the project.</p>
+
+<table>
+<tr><th>Area</th><th>Baseline (stock LibreChat quick start)</th></tr>
+<tr><td>Where it runs</td><td>One laptop, <code>http://localhost:3080</code>, no HTTPS, gone when the laptop sleeps.</td></tr>
+<tr><td>Monitoring</td><td>None. The only way to know it was down was to open it.</td></tr>
+<tr><td>Logs</td><td>Docker container logs with no size limit; LibreChat log files on local disk.</td></tr>
+<tr><td>Backups</td><td>None. The MongoDB data folder lives only on that disk.</td></tr>
+<tr><td>Secrets</td><td>All keys in a plain-text <code>.env</code> file next to the code.</td></tr>
+<tr><td>Access</td><td>Anyone who can reach the port can register.</td></tr>
+<tr><td>Automation</td><td>None.</td></tr>
+<tr><td>Content</td><td>None. A general chatbot with no knowledge of our domain.</td></tr>
+<tr><td>Quality measured?</td><td>No.</td></tr>
+<tr><td>Cost</td><td>PHP 0 (laptop), but not available to anyone else.</td></tr>
+</table>
+
+<h2>Security problems we listed at the start</h2>
+<ol>
+<li>Secrets in a plain-text file that is easy to commit to git by accident.</li>
+<li>No HTTPS: passwords would cross the network in clear text.</li>
+<li>The obvious way to get a shell on a cloud server is SSH on port 22 open to the internet.</li>
+<li>Class AWS account: risk of shared logins without MFA.</li>
+<li>No audit trail of who changed what.</li>
+<li>Unencrypted disk by default on older setups.</li>
+</ol>
+<p>The fixes are in the before-and-after table on <a href="operations.html#security">Security</a>.</p>
+</main><script src="nav.js"></script></body></html>

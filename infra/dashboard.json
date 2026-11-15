@@ -1,0 +1,31 @@
+{
+  "widgets": [
+    { "type": "metric", "x": 0, "y": 0, "width": 8, "height": 6,
+      "properties": { "title": "Requests (all) and chat requests per 5 min", "region": "REGION", "stat": "Sum", "period": 300,
+        "metrics": [["Askalinaw", "RequestCount"], ["Askalinaw", "ChatRequests"]] } },
+    { "type": "metric", "x": 8, "y": 0, "width": 8, "height": 6,
+      "properties": { "title": "Errors: HTTP 5xx and failed answers", "region": "REGION", "stat": "Sum", "period": 300,
+        "metrics": [["Askalinaw", "Errors5xx"], ["Askalinaw", "AnswersFailed"], ["Askalinaw", "EmptyAnswer"]] } },
+    { "type": "metric", "x": 16, "y": 0, "width": 8, "height": 6,
+      "properties": { "title": "Response time (site, s) and model answer time (ms)", "region": "REGION", "period": 300,
+        "metrics": [["Askalinaw", "ResponseTimeSeconds", {"stat": "Average"}],
+                    ["Askalinaw", "AnswerLatencyMs", {"stat": "Average", "yAxis": "right"}]],
+        "annotations": { "horizontal": [{ "label": "3 s alarm", "value": 3 }] } } },
+    { "type": "metric", "x": 0, "y": 6, "width": 8, "height": 6,
+      "properties": { "title": "CPU %", "region": "REGION", "stat": "Average", "period": 300,
+        "metrics": [["AWS/EC2", "CPUUtilization", "InstanceId", "INSTANCE_ID"]],
+        "annotations": { "horizontal": [{ "label": "85% alarm", "value": 85 }] } } },
+    { "type": "metric", "x": 8, "y": 6, "width": 8, "height": 6,
+      "properties": { "title": "Disk used % and memory used %", "region": "REGION", "stat": "Average", "period": 300,
+        "metrics": [["CWAgent", "disk_used_percent", "InstanceId", "INSTANCE_ID", "path", "/", "fstype", "xfs"],
+                    ["CWAgent", "mem_used_percent", "InstanceId", "INSTANCE_ID"]],
+        "annotations": { "horizontal": [{ "label": "disk alarm 85%", "value": 85 }] } } },
+    { "type": "metric", "x": 16, "y": 6, "width": 8, "height": 6,
+      "properties": { "title": "Site up (0 = up) and backup status (0 = OK)", "region": "REGION", "stat": "Maximum", "period": 300,
+        "metrics": [["Askalinaw", "SiteDown"], ["Askalinaw", "BackupFailed"]] } },
+    { "type": "log", "x": 0, "y": 12, "width": 24, "height": 6,
+      "properties": { "title": "Latest requests (Caddy access log)", "region": "REGION",
+        "query": "SOURCE '/askalinaw/access' | fields @timestamp, request.method, request.uri, status, duration | sort @timestamp desc | limit 20",
+        "view": "table" } }
+  ]
+}

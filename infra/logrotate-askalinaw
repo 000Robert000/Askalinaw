@@ -1,0 +1,10 @@
+# PREVENTION for incident INC-01 (disk filled by an unrotated log).
+# Installed to /etc/logrotate.d/askalinaw. Runs hourly via a logrotate.timer override (see runbook step 6).
+/var/log/askalinaw/*.log /var/log/caddy/*.log /opt/LibreChat/logs/*.log {
+    size 50M
+    rotate 3
+    compress
+    missingok
+    notifempty
+    copytruncate
+}
