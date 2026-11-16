@@ -10,7 +10,7 @@
 set -euo pipefail
 : "${TEAM_EMAIL:?set TEAM_EMAIL=your-real-email}"
 : "${GITHUB_REPO:?set GITHUB_REPO=https://github.com/you/askalinaw.git (public repo, no secrets in it)}"
-REGION="${REGION:-ap-southeast-1}"; export AWS_DEFAULT_REGION="$REGION"
+REGION="${REGION:-ap-southeast-2}"; export AWS_DEFAULT_REGION="$REGION"
 ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
 SUFFIX=$(echo "$ACCOUNT" | tail -c 5)
 BUCKET="askalinaw-$SUFFIX-$(date +%s | tail -c 5)"

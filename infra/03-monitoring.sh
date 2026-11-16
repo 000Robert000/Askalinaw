@@ -4,7 +4,7 @@
 #   INSTANCE_ID=i-... TOPIC=arn:aws:sns:... bash infra/03-monitoring.sh
 set -euo pipefail
 : "${INSTANCE_ID:?}" "${TOPIC:?}"
-REGION="${REGION:-ap-southeast-1}"; export AWS_DEFAULT_REGION="$REGION"
+REGION="${REGION:-ap-southeast-2}"; export AWS_DEFAULT_REGION="$REGION"
 NS=Askalinaw
 
 # Log groups exist before the agent ships anything, with retention set (not "Never expire")

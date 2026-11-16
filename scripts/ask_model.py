@@ -17,7 +17,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-REGION = os.environ.get("REGION", "ap-southeast-1")
+REGION = os.environ.get("REGION", "ap-southeast-2")
 MODEL = os.environ.get("ASKALINAW_MODEL", "gemini-2.5-flash")
 
 

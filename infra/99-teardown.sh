@@ -2,7 +2,7 @@
 # END OF TERM: deletes everything Askalinaw created (brief section 6.2).
 # Run in CloudShell AFTER you have recorded the video and taken every screenshot.
 set -uo pipefail
-REGION="${REGION:-ap-southeast-1}"; export AWS_DEFAULT_REGION="$REGION"
+REGION="${REGION:-ap-southeast-2}"; export AWS_DEFAULT_REGION="$REGION"
 read -rp "Type DELETE to remove all askalinaw resources: " ok; [ "$ok" = "DELETE" ] || exit 1
 
 IID=$(aws ec2 describe-instances --filters Name=tag:Name,Values=askalinaw-server Name=instance-state-name,Values=running,stopped --query 'Reservations[].Instances[].InstanceId' --output text)

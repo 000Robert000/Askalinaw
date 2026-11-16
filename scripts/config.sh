@@ -1,5 +1,5 @@
 # Shared settings, sourced by every script. Edit REGION if your class uses another one.
-export REGION="${REGION:-ap-southeast-1}"
+export REGION="${REGION:-ap-southeast-2}"
 export AWS_DEFAULT_REGION="$REGION"
 export PARAM_PREFIX="/askalinaw"
 export REPO_DIR="/opt/askalinaw"

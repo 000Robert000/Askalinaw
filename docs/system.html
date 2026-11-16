@@ -57,7 +57,7 @@
 
 <h2>7. How it is served</h2>
 <ul>
-<li><b>Where it runs:</b> one EC2 t3.medium, Amazon Linux 2023, ap-southeast-1, in Docker.</li>
+<li><b>Where it runs:</b> one EC2 t3.medium, Amazon Linux 2023, ap-southeast-2, in Docker.</li>
 <li><b>What calls it:</b> browsers at https://FILL-IN.sslip.io (LibreChat web UI and its <code>/api</code> paths).</li>
 <li><b>The model behind it:</b> Google <code>gemini-2.5-flash</code>, free tier API key (not hosted by us).</li>
 <li><b>If the model is unavailable:</b> the chat shows an error message; the health check marks <code>AnswersFailed</code> and after 3 failed checks the <code>askalinaw-answers-failed</code> alarm emails us. The rest of the site (history, login) keeps working.</li>
