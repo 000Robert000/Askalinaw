@@ -60,7 +60,7 @@ aws ec2 authorize-security-group-ingress --group-id "$SG" --ip-permissions \
   'IpProtocol=tcp,FromPort=80,ToPort=80,IpRanges=[{CidrIp=0.0.0.0/0}]' \
   'IpProtocol=tcp,FromPort=443,ToPort=443,IpRanges=[{CidrIp=0.0.0.0/0}]' >/dev/null
 
-say "5/8 Elastic IP + EC2 (t3.medium, Amazon Linux 2023, encrypted 30 GB disk)"
+say "5/8 Elastic IP + EC2 (t3.small, Amazon Linux 2023, encrypted 30 GB disk)"
 EIP_ALLOC=$(aws ec2 allocate-address --tag-specifications "ResourceType=elastic-ip,Tags=[$TAGSPEC]" --query AllocationId --output text)
 EIP=$(aws ec2 describe-addresses --allocation-ids "$EIP_ALLOC" --query 'Addresses[0].PublicIp' --output text)
 DOMAIN="$(echo "$EIP" | tr . -).sslip.io"
@@ -69,7 +69,7 @@ AMI=$(aws ssm get-parameter --name /aws/service/ami-amazon-linux-latest/al2023-a
 sed "s/REPLACE-WITH-IP.sslip.io/$DOMAIN/; s/REPLACE-WITH-TEAM-EMAIL/$TEAM_EMAIL/" infra/Caddyfile > /tmp/Caddyfile
 aws ssm put-parameter --name /askalinaw/CADDYFILE --type String --value "$(cat /tmp/Caddyfile)" --overwrite >/dev/null
 sed "s|__REPO_URL__|$GITHUB_REPO|; s|__REGION__|$REGION|" infra/02-server-setup.sh > /tmp/userdata.sh
-IID=$(aws ec2 run-instances --image-id "$AMI" --instance-type t3.medium \
+IID=$(aws ec2 run-instances --image-id "$AMI" --instance-type t3.small \
   --iam-instance-profile Name=askalinaw-ec2-profile --security-group-ids "$SG" \
   --metadata-options HttpTokens=required,HttpPutResponseHopLimit=2 \
   --block-device-mappings 'DeviceName=/dev/xvda,Ebs={VolumeSize=30,VolumeType=gp3,Encrypted=true}' \

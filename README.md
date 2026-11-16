@@ -11,7 +11,7 @@ SAM10 Systems Administration and Maintenance final project, by **Robert Santiago
 - **Base system:** LibreChat by Danny Avila and contributors, <https://github.com/LibreChat-AI/LibreChat>,
   **MIT licence**. We do not copy LibreChat's code into this repo; the server clones it at deploy time
   and we add configuration, branding and operations scripts.
-- **Model:** Google Gemini (`gemini-2.5-flash`) via the free-tier API. Subject to Google's Gemini API terms.
+- **Model:** Google Gemini (`gemini-3.5-flash`) via the free-tier API. Subject to Google's Gemini API terms.
 - **Content:** `content/kalinaw-handbook.md`, written by us. Entirely invented; no real personal data.
 - **AI assistance:** scripts and first drafts written with Claude (Anthropic). Declared on the website.
 
