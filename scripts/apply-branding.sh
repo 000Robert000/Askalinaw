@@ -8,7 +8,7 @@ mkdir -p "$B"
 cp "$REPO_DIR/librechat/branding/logo.svg" "$REPO_DIR/librechat/branding/askalinaw.css" "$B/"
 
 # Pull the stock index.html out of the image once, then add our stylesheet + title.
-IMAGE=$(cd "$LC_DIR" && docker compose config --images | grep -i librechat | head -1)
+IMAGE=$(cd "$LC_DIR" && docker compose config --format json | python3 -c 'import json,sys; print(json.load(sys.stdin)["services"]["api"]["image"])')
 cid=$(docker create "$IMAGE")
 docker cp "$cid:/app/client/dist/index.html" "$B/index.html.orig"
 docker rm "$cid" >/dev/null
