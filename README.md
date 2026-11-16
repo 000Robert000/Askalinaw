@@ -59,7 +59,7 @@ Who did what, week by week.
 | Week | Date | Robert Santiago | Ivan Ray Dequiros |
 |---|---|---|---|
 | 1 | 2026-11-15 | Read brief, chose domain, generated starter repo (with Claude, declared) | |
-| 1 | | | |
+| 1 | 2026-11-16 | | Reviewed the brief, Robert's guide and the starter repo; got repo access and set up my git identity |
 | 2 | | | |
 | 3 | | | |
 | 4 | | | |
