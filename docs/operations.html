@@ -23,6 +23,7 @@ and 3 seconds is about how long a person waits for an answer to start before the
 <tr><td>askalinaw-backup-failed</td><td>Nightly backup failed</td><td>Run <code>backup.sh</code> by hand, read its log</td></tr>
 </table>
 <figure><img src="img/e07-alarms.png" alt="CloudWatch alarms list"><figcaption>E-07 · All alarms, all sending to SNS topic askalinaw-alerts (both our emails).</figcaption></figure>
+<figure><img src="img/sns-confirmed.png" alt="SNS subscription confirmed"><figcaption>SNS email subscription to <code>askalinaw-alerts</code> confirmed.</figcaption></figure>
 <figure><img src="img/e08-alert-email.png" alt="Alarm email"><figcaption>E-08 · Alert received by FILL-IN at FILL-IN date/time.</figcaption></figure>
 <p><b>Request logging:</b> Caddy writes one JSON line per request (time, method, path, status, duration), shipped to
 <code>/askalinaw/access</code> (14-day retention). LibreChat's own log, which includes the question text and errors, goes to
@@ -63,4 +64,6 @@ back from S3 took <b>FILL-IN seconds</b>; rebuilding the whole server from scrat
 <figure><img src="img/e12-mfa.png" alt="IAM users with MFA"><figcaption>E-12 · IAM users with MFA.</figcaption></figure>
 <figure><img src="img/e13-parameters.png" alt="Parameter Store"><figcaption>E-13 · Secrets in Parameter Store (values hidden).</figcaption></figure>
 <figure><img src="img/sg.png" alt="Security group"><figcaption>Security group: inbound 80 and 443 only.</figcaption></figure>
+<figure><img src="img/cloudtrail.png" alt="CloudTrail trail"><figcaption>CloudTrail: trail <code>askalinaw-trail</code>, multi-region, home region Sydney, 17 Nov 2026.</figcaption></figure>
+<figure><img src="img/budget.png" alt="AWS Budgets"><figcaption>AWS Budgets: <code>askalinaw-budget</code>, USD 30/month, alerts at 85% and 100% actual and 100% forecast. Created on day one.</figcaption></figure>
 </main><script src="nav.js"></script></body></html>

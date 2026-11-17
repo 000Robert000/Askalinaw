@@ -10,7 +10,7 @@
   <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0F5C4D"/></marker></defs>
   <rect x="10" y="200" width="110" height="60" rx="8" fill="#fff" stroke="#0F5C4D"/><text x="65" y="225" text-anchor="middle">Student</text><text x="65" y="243" text-anchor="middle" fill="#5b6a65">browser</text>
   <rect x="160" y="20" width="560" height="480" rx="12" fill="#f7faf9" stroke="#999" stroke-dasharray="6 4"/><text x="175" y="42" fill="#5b6a65">AWS account · ap-southeast-2 · default VPC</text>
-  <rect x="190" y="60" width="300" height="280" rx="10" fill="#E6F2EF" stroke="#0F5C4D"/><text x="205" y="82" font-weight="700">EC2 t3.medium · askalinaw-server</text>
+  <rect x="190" y="60" width="300" height="280" rx="10" fill="#E6F2EF" stroke="#0F5C4D"/><text x="205" y="82" font-weight="700">EC2 t3.small · askalinaw-server</text>
   <text x="205" y="100" fill="#5b6a65">Elastic IP · 443/80 only · encrypted 30 GB</text>
   <rect x="210" y="115" width="260" height="36" rx="6" fill="#fff" stroke="#0F5C4D"/><text x="340" y="138" text-anchor="middle">① Caddy: HTTPS (Let's Encrypt)</text>
   <rect x="210" y="165" width="260" height="36" rx="6" fill="#fff" stroke="#0F5C4D"/><text x="340" y="188" text-anchor="middle">② LibreChat “Askalinaw” (Docker)</text>
@@ -51,12 +51,12 @@
 <h2>Every service and what it is for</h2>
 <table>
 <tr><th>Service</th><th>What it does here</th></tr>
-<tr><td>EC2 t3.medium (2 vCPU, 4 GB) + 2 GB swap</td><td>Runs Caddy, LibreChat, MongoDB, Meilisearch, cron jobs and the CloudWatch agent. Sized so LibreChat, MongoDB and Meilisearch fit in memory together. Whether it is oversized is checked on the Well-Architected page.</td></tr>
+<tr><td>EC2 t3.small (2 vCPU, 2 GB) + 2 GB swap</td><td>Runs Caddy, LibreChat, MongoDB, Meilisearch, cron jobs and the CloudWatch agent. We planned a t3.medium, but used t3.small to stay within the AWS Free plan; the swap file gives headroom. Whether it is big enough is checked on the Well-Architected page.</td></tr>
 <tr><td>Elastic IP + sslip.io</td><td>A fixed address; <code>1-2-3-4.sslip.io</code> gives us a hostname without buying a domain, so HTTPS works.</td></tr>
 <tr><td>S3 (versioned, encrypted, private)</td><td><b>AWS integration:</b> the handbook is read from S3 every deploy; uploaded files are stored in S3; nightly backups land in S3 and expire after 14 days.</td></tr>
 <tr><td>Systems Manager Parameter Store</td><td><b>AWS integration:</b> every secret (Gemini key, JWT and encryption keys) as SecureString, read at start-up.</td></tr>
 <tr><td>Systems Manager Session Manager</td><td>Shell access without SSH keys or an open port 22.</td></tr>
-<tr><td>CloudWatch</td><td>Logs (retention 7–30 days), metrics, FILL-IN alarms, one dashboard.</td></tr>
+<tr><td>CloudWatch</td><td>Logs (retention 7–30 days), metrics, 10 alarms, one dashboard.</td></tr>
 <tr><td>SNS</td><td><b>AWS integration:</b> sends alarm emails to both of us.</td></tr>
 <tr><td>IAM, CloudTrail, Budgets</td><td>Who can do what, a record of who did it, and a cost warning.</td></tr>
 </table>

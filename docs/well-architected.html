@@ -9,7 +9,7 @@ and an <b>after</b> pass once monitoring, backups, automation and the incident w
 <h2>Operational Excellence</h2>
 <p><b>Asks for:</b> run and monitor the system, automate changes, learn from failures.</p>
 <p><b>First pass:</b> deployed by one script, but no dashboard, no alarms, no runbooks. <span class="gap">Gap</span></p>
-<p><b>After:</b> dashboard, FILL-IN alarms, every request logged, two automations, one incident with a written root cause and a tested runbook. Deployment is a script, but it is not automatic from git. <span class="good">Good</span></p>
+<p><b>After:</b> dashboard, 10 alarms, every request logged, two automations, one incident with a written root cause and a tested runbook. Deployment is a script, but it is not automatic from git. <span class="good">Good</span></p>
 
 <h2>Security</h2>
 <p><b>Asks for:</b> strong identity, least privilege, protected data, traceability.</p>
@@ -19,11 +19,11 @@ and an <b>after</b> pass once monitoring, backups, automation and the incident w
 <h2>Reliability</h2>
 <p><b>Asks for:</b> detect failure, recover automatically or quickly, test recovery.</p>
 <p><b>First pass:</b> one server, no backups. <span class="gap">Gap</span></p>
-<p><b>After:</b> nightly backups, a restore tested in FILL-IN s, health check every 5 min. Still a single server in a single Availability Zone: if it dies we restore by hand (RTO about FILL-IN min). <span class="adequate">Adequate</span></p>
+<p><b>After:</b> nightly backups, a restore tested in FILL-IN s, site check every 5 min, AI answer check every hour. Still a single server in a single Availability Zone: if it dies we restore by hand (RTO about FILL-IN min). <span class="adequate">Adequate</span></p>
 
 <h2>Performance Efficiency</h2>
 <p><b>Asks for:</b> the right resource size, measured.</p>
-<p><b>First pass:</b> t3.medium chosen by guess. <span class="adequate">Adequate</span></p>
+<p><b>First pass:</b> t3.medium planned, t3.small used to stay within the Free plan, not yet measured. <span class="adequate">Adequate</span></p>
 <p><b>After:</b> average CPU FILL-IN %, memory FILL-IN %, average model answer time FILL-IN ms over FILL-IN-DATES. FILL-IN: "right-sized" or "could drop to t3.small". <span class="adequate">Adequate</span></p>
 
 <h2>Cost Optimization</h2>
