@@ -8,8 +8,8 @@
 <table>
 <tr><th></th><th>1 · Nightly backup</th><th>2 · Health and answer check</th></tr>
 <tr><td>Script</td><td><code>scripts/backup.sh</code></td><td><code>scripts/healthcheck.sh</code> + <code>ask_model.py</code></td></tr>
-<tr><td>Schedule</td><td>cron, 02:00 Manila every night</td><td>cron, every 5 minutes</td></tr>
-<tr><td>What it does</td><td>Dumps MongoDB, archives config, uploads both to S3, reports BackupFailed 0/1</td><td>Loads the site, asks the model a question with a known answer, reports SiteDown, AnswersFailed, EmptyAnswer, AnswerLatencyMs</td></tr>
+<tr><td>Schedule</td><td>cron, 02:00 Manila every night</td><td>cron, every 5 minutes (site); the AI answer check runs on the first run of each hour</td></tr>
+<tr><td>What it does</td><td>Dumps MongoDB, archives config, uploads both to S3, reports BackupFailed 0/1</td><td>Loads the site and reports SiteDown; once an hour asks the model a question with a known answer and reports AnswersFailed, EmptyAnswer, AnswerLatencyMs</td></tr>
 <tr><td>Ran unattended at</td><td>FILL-IN, FILL-IN, FILL-IN</td><td>FILL-IN first … FILL-IN last (FILL-IN runs)</td></tr>
 </table>
 <figure><img src="img/e14-automation.png" alt="Automation log"><figcaption>E-14 · <code>/askalinaw/automation</code> log: timestamped lines from both jobs on different days, with nobody logged in.</figcaption></figure>
@@ -42,7 +42,7 @@ Restarting alone would not have helped: the file would still be there.</p>
 </ul>
 
 <h2 id="runbook">Runbook: Server disk full</h2>
-<p>The full runbook is <a href="https://github.com/FILL-IN/askalinaw/blob/main/fault/RUNBOOK-disk-full.md">fault/RUNBOOK-disk-full.md</a>. Last tested FILL-IN-DATE, takes about 15 minutes.</p>
+<p>The full runbook is <a href="https://github.com/000Robert000/Askalinaw/blob/main/fault/RUNBOOK-disk-full.md">fault/RUNBOOK-disk-full.md</a>. Last tested FILL-IN-DATE, takes about 15 minutes.</p>
 <pre>
 1. WHAT IT IS FOR   Get Askalinaw working again when the root disk is full, and stop it refilling.
 2. YOU NEED IT WHEN Email "ALARM: askalinaw-disk-high"; users can't save chats.   Check: df -h /

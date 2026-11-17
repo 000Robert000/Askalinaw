@@ -6,7 +6,9 @@
 
 <h2>Before and after the reskin</h2>
 <figure><img src="img/e05-original.png" alt="Stock LibreChat"><figcaption>E-05 · The original LibreChat, run locally on FILL-IN-DATE.</figcaption></figure>
-<figure><img src="img/e01-askalinaw.png" alt="Askalinaw answering a question"><figcaption>E-01/E-02 · Askalinaw at https://FILL-IN.sslip.io on FILL-IN-DATE, answering a real question.</figcaption></figure>
+<figure><img src="img/login.png" alt="Askalinaw login page"><figcaption>Askalinaw login page: our logo, colours and wording, served over HTTPS.</figcaption></figure>
+<figure><img src="img/e01-askalinaw.png" alt="Askalinaw answering a question"><figcaption>E-01/E-02 · Askalinaw at https://32-236-2-242.sslip.io on 17 Nov 2026, answering a real question from the handbook.</figcaption></figure>
+<figure><img src="img/scholarship-refusal.png" alt="Askalinaw declining a scholarship decision"><figcaption>Responsible use: asked whether a student qualifies for a scholarship, it declines and points to the Scholarship Committee and the OSA.</figcaption></figure>
 
 <h1>SYSTEM CARD: Askalinaw</h1>
 
@@ -58,9 +60,9 @@
 <h2>7. How it is served</h2>
 <ul>
 <li><b>Where it runs:</b> one EC2 t3.small, Amazon Linux 2023, ap-southeast-2, in Docker.</li>
-<li><b>What calls it:</b> browsers at https://FILL-IN.sslip.io (LibreChat web UI and its <code>/api</code> paths).</li>
+<li><b>What calls it:</b> browsers at https://32-236-2-242.sslip.io (LibreChat web UI and its <code>/api</code> paths).</li>
 <li><b>The model behind it:</b> Google <code>gemini-3.5-flash</code>, free tier API key (not hosted by us).</li>
-<li><b>If the model is unavailable:</b> the chat shows an error message; the health check marks <code>AnswersFailed</code> and after 3 failed checks the <code>askalinaw-answers-failed</code> alarm emails us. The rest of the site (history, login) keeps working.</li>
+<li><b>If the model is unavailable:</b> the chat shows an error message; the health check marks <code>AnswersFailed</code> and after 2 failed hourly checks in a row the <code>askalinaw-answers-failed</code> alarm emails us. The rest of the site (history, login) keeps working.</li>
 </ul>
 
 <h2>8. Limitations and risks</h2>
@@ -73,7 +75,7 @@
 
 <h2>9. Operational summary</h2>
 <ul>
-<li><b>Code:</b> github.com/FILL-IN/askalinaw</li>
+<li><b>Code:</b> github.com/000Robert000/Askalinaw</li>
 <li><b>Backups:</b> MongoDB and config to S3 every night at 02:00 Manila time, kept 14 days; handbook versioned in S3.</li>
 <li><b>Healthy when:</b> no <code>askalinaw-*</code> alarms are in ALARM state (see <a href="operations.html">Monitoring</a>).</li>
 <li><b>Contact:</b> Robert Santiago, Ivan Ray Dequiros (SAM10).</li>

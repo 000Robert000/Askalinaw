@@ -5,7 +5,7 @@
 <h1>Monitoring, backup and restore, security</h1>
 
 <h2 id="monitoring">Monitoring</h2>
-<figure><img src="img/e06-dashboard.png" alt="CloudWatch dashboard"><figcaption>E-06 · CloudWatch dashboard "Askalinaw", FILL-IN date/time range. Requests, errors, response time, CPU, disk, memory, site-up and backup status, plus the latest requests.</figcaption></figure>
+<figure><img src="img/e06-dashboard.png" alt="CloudWatch dashboard"><figcaption>E-06 · CloudWatch dashboard "Askalinaw", last 24 hours to 17 Nov 2026 09:00 UTC (17:00 Manila). Requests, errors, response time, CPU, disk, memory, site-up and backup status, plus the latest requests.</figcaption></figure>
 <p><b>Why these thresholds:</b> we used the brief's starter values. 85% CPU or disk leaves time to act before failure,
 and 3 seconds is about how long a person waits for an answer to start before they think it's broken.</p>
 
@@ -22,13 +22,14 @@ and 3 seconds is about how long a person waits for an answer to start before the
 <tr><td>askalinaw-empty-answer</td><td>Any empty answer</td><td>Content missing or model blocked</td></tr>
 <tr><td>askalinaw-backup-failed</td><td>Nightly backup failed</td><td>Run <code>backup.sh</code> by hand, read its log</td></tr>
 </table>
-<figure><img src="img/e07-alarms.png" alt="CloudWatch alarms list"><figcaption>E-07 · All alarms, all sending to SNS topic askalinaw-alerts (both our emails).</figcaption></figure>
+<figure><img src="img/e07-alarms.png" alt="CloudWatch alarms list"><figcaption>E-07 · All 10 alarms, all sending to SNS topic askalinaw-alerts, on 17 Nov 2026 at about 17:00 Manila. <code>askalinaw-answers-failed</code> is in ALARM: since 07:01 UTC the hourly answer check has been getting HTTP 503 "Service Unavailable" (and earlier 429) from the Gemini API, while the site itself stayed up. This is the alarm doing its job: it caught a problem on the model provider's side that a simple "is the site up" check would miss.</figcaption></figure>
+<figure><img src="img/sns-confirmed.png" alt="SNS subscription confirmed"><figcaption>SNS email subscription to <code>askalinaw-alerts</code> confirmed.</figcaption></figure>
 <figure><img src="img/e08-alert-email.png" alt="Alarm email"><figcaption>E-08 · Alert received by FILL-IN at FILL-IN date/time.</figcaption></figure>
 <p><b>Request logging:</b> Caddy writes one JSON line per request (time, method, path, status, duration), shipped to
 <code>/askalinaw/access</code> (14-day retention). LibreChat's own log, which includes the question text and errors, goes to
 <code>/askalinaw/app</code>. The version that answered is the git commit, set as <code>APP_VERSION</code> at deploy. The health check
 also records the model's answer time.</p>
-<figure><img src="img/e09-request-log.png" alt="Request log sample"><figcaption>E-09 · Logs Insights query on the request log, FILL-IN date.</figcaption></figure>
+<figure><img src="img/e09-request-log.png" alt="Request log sample"><figcaption>E-09 · Logs Insights query on <code>/askalinaw/access</code>, 17 Nov 2026: one line per request with time, method, path, status and duration in seconds.</figcaption></figure>
 
 <h2 id="backup">Backup and restore</h2>
 <p><b>What we would need to restore to get the system back:</b></p>
@@ -60,7 +61,12 @@ back from S3 took <b>FILL-IN seconds</b>; rebuilding the whole server from scrat
 <tr><td>Personal data to a third party</td><td>All data invented; prompt tells the assistant not to ask for personal info</td><td>Nothing personal reaches Google.</td></tr>
 <tr><td>Gemini key scope</td><td>Key restricted to the Generative Language API in Google AI Studio, deleted at end of term</td><td>A leaked key can't be used for other Google services.</td></tr>
 </table>
-<figure><img src="img/e12-mfa.png" alt="IAM users with MFA"><figcaption>E-12 · IAM users with MFA.</figcaption></figure>
-<figure><img src="img/e13-parameters.png" alt="Parameter Store"><figcaption>E-13 · Secrets in Parameter Store (values hidden).</figcaption></figure>
-<figure><img src="img/sg.png" alt="Security group"><figcaption>Security group: inbound 80 and 443 only.</figcaption></figure>
+<figure><img src="img/e12-mfa.png" alt="IAM users with MFA"><figcaption>E-12 · Each of us signs in with our own AWS login (AWS Builder ID, added as a separate member of the project) and each login has its own authenticator-app MFA device. No shared logins. 17 Nov 2026.</figcaption></figure>
+<figure><img src="img/e12-users.png" alt="Project members"><figcaption>E-12 · The AWS project has two separate members, Ivan (owner) and Robert, each with their own login. Emails blurred.</figcaption></figure>
+<figure><img src="img/e13-parameters.png" alt="Parameter Store"><figcaption>E-13 · Parameter Store, 17 Nov 2026: every secret is a SecureString and values are not shown; non-secret settings (bucket, domain, Caddyfile) are plain String.</figcaption></figure>
+<figure><img src="img/sg.png" alt="Security group"><figcaption>Security group askalinaw-web, 17 Nov 2026: two inbound rules, HTTP and HTTPS. No SSH, no database port.</figcaption></figure>
+<figure><img src="img/iam-role.png" alt="EC2 role permissions"><figcaption>The server's role: two AWS-managed policies (Session Manager, CloudWatch agent) plus our inline <code>askalinaw-least-privilege</code> policy, which only allows objects in our own bucket.</figcaption></figure>
+<figure><img src="img/ebs-encrypted.png" alt="Encrypted EBS volume"><figcaption>The server's 30 GB gp3 disk, attached to askalinaw-server: Encryption = Encrypted (aws/ebs key).</figcaption></figure>
+<figure><img src="img/cloudtrail.png" alt="CloudTrail trail"><figcaption>CloudTrail: trail <code>askalinaw-trail</code>, multi-region, home region Sydney, 17 Nov 2026.</figcaption></figure>
+<figure><img src="img/budget.png" alt="AWS Budgets"><figcaption>AWS Budgets: <code>askalinaw-budget</code>, USD 30/month, alerts at 85% and 100% actual and 100% forecast. Created on day one.</figcaption></figure>
 </main><script src="nav.js"></script></body></html>

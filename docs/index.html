@@ -16,7 +16,7 @@ information. It never decides anything about a person, such as grades, scholarsh
 filled with our own content. The answers come from Google's Gemini model (free tier). Everything else
 (the server, database backups, file storage, secrets, monitoring and alerts) runs in Amazon Web Services (AWS),
 and that is what this project is really about.</p>
-<p>Live system: <a href="https://FILL-IN.sslip.io">https://FILL-IN.sslip.io</a></p>
+<p>Live system: <a href="https://32-236-2-242.sslip.io">https://32-236-2-242.sslip.io</a></p>
 
 <h2>What was wrong with how it was run</h2>
 <p>Out of the box, LibreChat is a program you start on one computer and hope for the best. There is no warning
@@ -25,10 +25,10 @@ See <a href="baseline.html">Baseline</a>.</p>
 
 <h2>What we changed</h2>
 <ul>
-<li><b>We can see it:</b> a dashboard, FILL-IN alarms that email both of us, and a log line for every request.</li>
+<li><b>We can see it:</b> a dashboard, 10 alarms that email both of us, and a log line for every request.</li>
 <li><b>We can recover it:</b> a nightly database backup to S3, versioned content, and a restore we actually tested (FILL-IN seconds).</li>
 <li><b>It's locked down:</b> MFA, own logins, no SSH port, secrets in Parameter Store, least-privilege permissions, encrypted disk.</li>
-<li><b>It looks after itself:</b> two automations (nightly backup, 5-minute health and answer check) that run with nobody touching them.</li>
+<li><b>It looks after itself:</b> two automations (nightly backup, and a health check every 5 minutes that also tests an AI answer every hour) that run with nobody touching them.</li>
 <li><b>We broke it on purpose:</b> filled the disk, got alerted in FILL-IN minutes, fixed it, found the root cause, and added prevention.</li>
 </ul>
 

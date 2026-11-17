@@ -4,8 +4,8 @@ A student help-desk assistant for **Kalinaw University** (fictional), built by r
 [LibreChat](https://github.com/LibreChat-AI/LibreChat) and operated on AWS.
 SAM10 Systems Administration and Maintenance final project, by **Robert Santiago & Ivan Ray Dequiros**.
 
-- Website (system card, evidence, video): https://FILL-IN.github.io/askalinaw/
-- Live system: https://FILL-IN.sslip.io
+- Website (system card, evidence, video): https://000robert000.github.io/Askalinaw/
+- Live system: https://32-236-2-242.sslip.io
 
 ## Credits and licence
 - **Base system:** LibreChat by Danny Avila and contributors, <https://github.com/LibreChat-AI/LibreChat>,
@@ -40,7 +40,7 @@ SAM10 Systems Administration and Maintenance final project, by **Robert Santiago
 
 **Automations** (installed by `infra/crontab`):
 - `backup.sh`: nightly at 18:00 UTC (02:00 Manila). Dumps MongoDB and config to S3.
-- `healthcheck.sh`: every 5 minutes. Checks the site and the model answer, and publishes metrics.
+- `healthcheck.sh`: every 5 minutes. Checks the site; once an hour it also checks a model answer (more often hit the Gemini free-tier limit). Publishes metrics.
 
 Both write timestamped lines to `/var/log/askalinaw/automation.log`, which is shipped to the CloudWatch log group `/askalinaw/automation`.
 
@@ -60,7 +60,7 @@ Who did what, week by week.
 |---|---|---|---|
 | 1 | 2026-11-15 | Read brief, chose domain, generated starter repo (with Claude, declared) | |
 | 1 | 2026-11-16 | | Reviewed the brief, Robert's guide and the starter repo; got repo access and set up my git identity |
-| 2 | | | |
+| 2 | 2026-11-17 | Joined the AWS project as my own member with MFA; subscribed to the alarm emails; took the monitoring and security screenshots (dashboard, alarms, request log, Parameter Store, security group, IAM role, EBS); first Well-Architected pass; updated the website with the live deployment details (with Claude's help, declared) | |
 | 3 | | | |
 | 4 | | | |
 | 5 | | | |
