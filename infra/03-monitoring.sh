@@ -43,7 +43,7 @@ alarm memory-high     "Memory >90% for 5 min: process may be killed"        CWAg
 alarm http-5xx        "Any 5xx error from the site"                         $NS Errors5xx Sum 60 1 0 GreaterThanThreshold
 alarm slow-responses  "Average response >3 s over 5 min"                    $NS ResponseTimeSeconds Average 300 1 3 GreaterThanThreshold
 alarm site-down       "Health check cannot load the site (2 checks in a row)" $NS SiteDown Maximum 300 2 0 GreaterThanThreshold "" breaching
-alarm answers-failed  "Model gave a wrong/failed answer to the known test question (3 checks)" $NS AnswersFailed Sum 900 1 2 GreaterThanThreshold "" breaching
+alarm answers-failed  "Model answer check failed 2 hourly checks in a row (wrong answer, 429 quota, bad key)" $NS AnswersFailed Maximum 3600 2 0 GreaterThanThreshold
 alarm empty-answer    "Model returned an EMPTY answer: content or key problem" $NS EmptyAnswer Maximum 1800 1 0 GreaterThanThreshold
 alarm backup-failed   "Nightly backup failed"                              $NS BackupFailed Maximum 86400 1 0 GreaterThanThreshold
 
