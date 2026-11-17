@@ -61,7 +61,7 @@
 <ul>
 <li><b>Where it runs:</b> one EC2 t3.small, Amazon Linux 2023, ap-southeast-2, in Docker.</li>
 <li><b>What calls it:</b> browsers at https://32-236-2-242.sslip.io (LibreChat web UI and its <code>/api</code> paths).</li>
-<li><b>The model behind it:</b> Google <code>gemini-3.5-flash</code>, free tier API key (not hosted by us).</li>
+<li><b>The model behind it:</b> Google <code>gemini-3.5-flash-lite</code>, free tier API key (not hosted by us).</li>
 <li><b>If the model is unavailable:</b> the chat shows an error message; the health check marks <code>AnswersFailed</code> and after 2 failed hourly checks in a row the <code>askalinaw-answers-failed</code> alarm emails us. The rest of the site (history, login) keeps working.</li>
 </ul>
 

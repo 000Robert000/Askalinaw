@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = ROOT / "librechat" / "librechat.template.yaml"
 OUT = ROOT / "librechat" / "librechat.yaml"
 LOCAL_HANDBOOK = ROOT / "content" / "kalinaw-handbook.md"
-MODEL = os.environ.get("ASKALINAW_MODEL", "gemini-3.5-flash")
+MODEL = os.environ.get("ASKALINAW_MODEL", "gemini-3.5-flash-lite")
 
 
 def from_s3():
