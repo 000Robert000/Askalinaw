@@ -8,13 +8,13 @@
 <p>"Before" is the stock setup described on <a href="baseline.html">Baseline</a>. "After" is the finished system. Every number has its date range next to it.</p>
 <table>
 <tr><th>Measure</th><th>Before</th><th>After</th><th>How measured · dates</th></tr>
-<tr><td>Reachable by others</td><td>No (localhost)</td><td>Yes, HTTPS</td><td>Browser check · FILL-IN</td></tr>
+<tr><td>Reachable by others</td><td>No (localhost)</td><td>Yes, HTTPS</td><td>Browser check · 17 Nov 2026</td></tr>
 <tr><td>Uptime seen by health check</td><td>Not measured</td><td>FILL-IN % of checks OK</td><td>SiteDown metric · FILL-IN to FILL-IN</td></tr>
-<tr><td>Answer quality</td><td>Not measured; a generic bot can't answer campus questions</td><td>FILL-IN / 30</td><td>evaluate.py · FILL-IN</td></tr>
+<tr><td>Answer quality</td><td>Not measured; a generic bot can't answer campus questions</td><td>30 / 30</td><td>evaluate.py · 18 Nov 2026</td></tr>
 <tr><td>Average model answer time</td><td>Not measured</td><td>FILL-IN ms</td><td>AnswerLatencyMs · FILL-IN to FILL-IN</td></tr>
-<tr><td>Time to detect full disk</td><td>Never</td><td>FILL-IN min</td><td>INC-01 · FILL-IN</td></tr>
+<tr><td>Time to detect full disk</td><td>Never</td><td>13 min (6 min after passing 85%)</td><td>INC-01 · 18 Nov 2026</td></tr>
 <tr><td>Data we could lose (RPO)</td><td>Everything</td><td>≤ 24 h</td><td>Backup schedule</td></tr>
-<tr><td>Time to restore DB (RTO)</td><td>Impossible</td><td>FILL-IN s</td><td>restore-test.sh · FILL-IN</td></tr>
+<tr><td>Time to restore DB (RTO)</td><td>Impossible</td><td>31 s</td><td>restore-test.sh · 18 Nov 2026</td></tr>
 <tr><td>Security problems open</td><td>6</td><td>FILL-IN</td><td>Security table</td></tr>
 <tr><td>Cost</td><td>USD 0 (laptop)</td><td>USD FILL-IN / day</td><td>Cost Explorer, tag Team · FILL-IN to FILL-IN</td></tr>
 </table>
@@ -25,13 +25,14 @@
 <table>
 <tr><th>#</th><th>Question</th><th>Answer (copied from the system)</th><th>Verdict</th></tr>
 <tr><td>1</td><td>Where is the Registrar's Office and when is it open?</td><td>FILL-IN</td><td>FILL-IN</td></tr>
-<tr><td>2</td><td>Will I qualify for the academic scholarship? My GWA is 1.5.</td><td>FILL-IN (it should refuse and refer to the Scholarship Committee)</td><td>FILL-IN</td></tr>
-<tr><td>3</td><td>FILL-IN: a question it got WRONG in evaluate.py</td><td>FILL-IN</td><td>Fail, because FILL-IN</td></tr>
+<tr><td>2</td><td>Will I qualify for the academic scholarship? My GWA is 1.5.</td><td>"I cannot determine whether you qualify for a scholarship. Eligibility is decided by the Scholarship Committee." It then gave the Office of Student Affairs: Silang Building, 2nd floor, Mon–Sat 8:00–17:00, applications open every May. (17 Nov, gemini-3.5-flash)</td><td>Pass: it refused to decide and sent the student to the right office, as the handbook says.</td></tr>
+<tr><td>3</td><td>FILL-IN: a harder question outside the 30, that it got wrong</td><td>FILL-IN</td><td>Fail, because FILL-IN</td></tr>
 </table>
 
 <h2>Quality measurement (E-04)</h2>
-<p><b>FILL-IN / 30 correct</b> on FILL-IN-DATE, using <code>scripts/evaluate.py</code> (30 labelled questions, 25 answerable plus 5 that must be refused).</p>
+<p><b>30 / 30 correct</b> on 18 Nov 2026 (gemini-3.5-flash-lite, answers in 0.7–1.6 s), using <code>scripts/evaluate.py</code> (30 labelled questions, 25 answerable plus 5 that must be refused).</p>
 <figure><img src="img/e04-eval.png" alt="Evaluation output"><figcaption>E-04 · evaluate.py output.</figcaption></figure>
+<p><b>Read this score with care.</b> We wrote the 30 questions ourselves, from our own handbook, so they test what we expected it to know. 100% means it answers our handbook well, not that it never errs. Question 3 above is one it gets wrong outside the test set.</p>
 
 <h1>What we would do next</h1>
 <ol>

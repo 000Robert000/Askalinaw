@@ -15,34 +15,59 @@
 <figure><img src="img/e14-automation.png" alt="Automation log"><figcaption>E-14 · <code>/askalinaw/automation</code> log: timestamped lines from both jobs on different days, with nobody logged in.</figcaption></figure>
 <p>Deploy instructions are in the repository <code>README.md</code>.</p>
 
-<h2>Incident INC-01: the disk filled up</h2>
+<h2>Incident INC-01: the disk filled up (18 Nov 2026)</h2>
 <table>
 <tr><th>When (Manila time)</th><th>What happened</th></tr>
-<tr><td>FILL-IN</td><td><b>Started:</b> a runaway "chat debug log" began writing 1 GB every 30 s (fault injected with <code>fault/fill-disk.sh</code>).</td></tr>
-<tr><td>FILL-IN</td><td><b>Noticed:</b> email "ALARM: askalinaw-disk-high".</td></tr>
-<tr><td>FILL-IN</td><td>Site: FILL-IN (e.g. new messages fail to save, "Something went wrong").</td></tr>
-<tr><td>FILL-IN</td><td><b>Fixed:</b> log truncated, app restarted, test question answered correctly.</td></tr>
+<tr><td>18:13</td><td><b>Started:</b> a runaway "chat debug log" began writing 1 GB every 30 s (fault injected with <code>fault/fill-disk.sh</code>). Disk at 37%.</td></tr>
+<tr><td>18:18</td><td>The script stopped at 77%: <code>fallocate</code> could not grow the one file any further. We added a second 5 GB debug log (<code>chat-debug.2.log</code>) to carry the same fault past the alarm line.</td></tr>
+<tr><td>18:21</td><td>Disk passed 85% (first 5-minute average: 85.006%). It went on to 94% (29 of 30 GB used).</td></tr>
+<tr><td>18:26</td><td><b>Noticed:</b> email "ALARM: askalinaw-disk-high" (alarm state change 18:26:53).</td></tr>
+<tr><td>18:27</td><td>Site: FILL-IN (what you saw when you tried a chat at 94%).</td></tr>
+<tr><td>18:29</td><td><b>Fixed:</b> both debug logs truncated, disk back to 37%, LibreChat and MongoDB restarted, all containers Up.</td></tr>
+<tr><td>18:31</td><td><b>Prevented:</b> log rotation installed and tested (see below).</td></tr>
 </table>
-<p><b>Time to detect:</b> FILL-IN min. <b>Time to fix:</b> FILL-IN min (from alarm to working).</p>
+<p><b>Time to detect:</b> 13 min from the start, about 6 min after the disk passed 85% (the alarm averages over 5 minutes). <b>Time to fix:</b> 3 min (alarm email to disk back to 37%).</p>
 
 <h3>Investigation</h3>
-<figure><img src="img/e15-df.png" alt="df output"><figcaption>E-15 · <code>df -h /</code> at 98%.</figcaption></figure>
-<figure><img src="img/e15-du.png" alt="du output"><figcaption>E-15 · <code>du</code> pointing to /var/log/askalinaw/chat-debug.log.</figcaption></figure>
+<figure><img src="img/e15-df.png" alt="df output"><figcaption>E-15 · <code>df -h /</code> at 94%: 29 of 30 GB used, 1.9 GB left.</figcaption></figure>
+<figure><img src="img/e15-du.png" alt="du output"><figcaption>E-15 · <code>du</code> pointing to the two debug logs: <code>chat-debug.log</code> (12 GB) and <code>chat-debug.2.log</code> (5.3 GB).</figcaption></figure>
+<figure><img src="img/e15-alarm-email.png" alt="Alarm email"><figcaption>E-15 · the "ALARM: askalinaw-disk-high" email that told us, 18:26 on 18 Nov.</figcaption></figure>
 
 <h3>Root cause</h3>
-<p>The disk filled because a debug log under <code>/var/log/askalinaw/</code> had <b>no log rotation or size limit</b>. It grew until the
-30 GB root disk was full. MongoDB then could not write, so LibreChat could not save messages or sessions, and users got errors.
-Restarting alone would not have helped: the file would still be there.</p>
+<p>The disk filled because a debug log under <code>/var/log/askalinaw/</code> had <b>no log rotation or size limit</b>, so nothing stopped it
+growing. We stopped it at 94%. Left alone it reaches 100%; then MongoDB cannot write, LibreChat cannot save messages or sessions,
+and users get errors. Restarting alone would not have helped: the file would still be there.</p>
 
 <h3>Prevention, and proof it works</h3>
 <ul>
 <li><b>Log rotation</b> (<code>infra/logrotate-askalinaw</code>): every log in our folders is capped at 50 MB × 3, checked hourly. Docker container logs were already capped at 10 MB × 3.</li>
 <li><b>Alarm on the root-cause metric</b>: <code>askalinaw-disk-high</code> at 85% gave us warning before 100%.</li>
-<li><b>Verified:</b> FILL-IN, e.g. "wrote a 200 MB test log, ran <code>logrotate -f</code>, the file was rotated and compressed" plus a screenshot.</li>
+<li><b>Verified</b> at 18:31 on 18 Nov: we wrote a 200 MB test log, ran <code>logrotate -f /etc/logrotate.d/askalinaw</code>, and the log was emptied and kept as a compressed <code>chat-debug.log.1.gz</code>. A side effect proved it too: rotation also compressed our own <code>fault-timeline.log</code>, so we read the first half of the timeline back with <code>zcat</code>.</li>
 </ul>
+<figure><img src="img/e15-prevention.png" alt="logrotate test"><figcaption>E-15 · after <code>logrotate -f</code>: every log in the folder is back to 0 bytes with a compressed <code>.1.gz</code> copy beside it.</figcaption></figure>
+
+<h2>Incident INC-02: the AI model stopped answering (17 Nov 2026, not planned)</h2>
+<p>This one happened on its own. Our health check caught it.</p>
+<table>
+<tr><th>When (Manila time)</th><th>What happened</th></tr>
+<tr><td>02:02</td><td><b>Noticed:</b> email "ALARM: askalinaw-answers-failed". It then flipped between ALARM and OK all night.</td></tr>
+<tr><td>08:59</td><td>The health-check log showed <code>HTTP Error 429: Too Many Requests</code> on every check.</td></tr>
+<tr><td>09:11</td><td><b>Fix 1:</b> the model check runs once an hour, not every 5 minutes, and the alarm needs two failed hours in a row.</td></tr>
+<tr><td>16:00 and 18:01</td><td>Hourly checks failed differently: <code>503 Service Unavailable</code>, then a 60 s timeout.</td></tr>
+<tr><td>18:15</td><td>The chat on the site itself returned "status 503".</td></tr>
+<tr><td>18:20</td><td>We tested both models directly: <code>gemini-3.5-flash</code> gave no answer in 60 s, <code>gemini-3.5-flash-lite</code> answered in 6.5 s.</td></tr>
+<tr><td>18:26</td><td><b>Fix 2:</b> switched to <code>gemini-3.5-flash-lite</code> and redeployed.</td></tr>
+<tr><td>18:30</td><td><b>Verified:</b> health check <code>site=200 answer=PASS</code>, answer in 3.7 s.</td></tr>
+</table>
+<p><b>Root cause:</b> two causes in a row. First, our own check called the model 288 times a day, over the Gemini free tier, so Google answered 429. Second, the free tier of <code>gemini-3.5-flash</code> was overloaded that day (503 and timeouts). <b>Prevention:</b> 24 model calls a day instead of 288; a lighter model with more free capacity; the log now records the error reason; the alarm ignores a single failed hour.</p>
+<p><b>What we learned:</b> the alarm worked, but it fired at 2 AM while we slept, so detection took hours. A free AI tier is a dependency we do not control.</p>
+<figure><img src="img/e08-alert-email.png" alt="Answers-failed alarm email"><figcaption>E-08 · real alert received: "ALARM: askalinaw-answers-failed", 02:02 on 17 Nov.</figcaption></figure>
+<figure><img src="img/e15-429-log.png" alt="429 log"><figcaption>Health-check log with the 429 errors.</figcaption></figure>
+<figure><img src="img/e15-model-test.png" alt="Model test"><figcaption>The measurement behind the fix: flash timed out, flash-lite answered in 6.5 s.</figcaption></figure>
+<figure><img src="img/e15-429-fixed.png" alt="Fixed"><figcaption>After the fix: <code>answer=PASS</code>.</figcaption></figure>
 
 <h2 id="runbook">Runbook: Server disk full</h2>
-<p>The full runbook is <a href="https://github.com/000Robert000/Askalinaw/blob/main/fault/RUNBOOK-disk-full.md">fault/RUNBOOK-disk-full.md</a>. Last tested FILL-IN-DATE, takes about 15 minutes.</p>
+<p>The full runbook is <a href="https://github.com/000Robert000/Askalinaw/blob/main/fault/RUNBOOK-disk-full.md">fault/RUNBOOK-disk-full.md</a>. Last tested 18 Nov 2026 (INC-01), took 3 minutes to fix and 5 more to install the prevention.</p>
 <pre>
 1. WHAT IT IS FOR   Get Askalinaw working again when the root disk is full, and stop it refilling.
 2. YOU NEED IT WHEN Email "ALARM: askalinaw-disk-high"; users can't save chats.   Check: df -h /
