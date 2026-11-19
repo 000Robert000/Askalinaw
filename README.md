@@ -61,6 +61,6 @@ Who did what, week by week.
 | 1 | 2026-11-15 | Read brief, chose domain, generated starter repo (with Claude, declared) | |
 | 1 | 2026-11-16 | | Reviewed the brief, Robert's guide and the starter repo; got repo access and set up my git identity |
 | 2 | 2026-11-17 | Joined the AWS project as my own member with MFA; subscribed to the alarm emails; took the monitoring and security screenshots (dashboard, alarms, request log, Parameter Store, security group, IAM role, EBS); first Well-Architected pass; updated the website with the live deployment details (with Claude's help, declared) | Created the AWS account (Free plan) with a $30 budget alert and MFA; invited Robert; deployed to Sydney with 01-create-aws.sh; found and fixed 4 deploy problems (region SCP, Free-tier instance type, branding image bug, retired Gemini model); fixed the Gemini 429 quota problem by making the model check hourly (with Claude's help, declared) |
-| 3 | | | |
+| 3 | 2026-11-19 | Fixed GitHub Pages to publish from /docs; backup, automation and cost evidence; filled operations page (alerts, restore, RTO/RPO, security) and automation dates (with Claude's help, declared) | |
 | 4 | | | |
 | 5 | | | |

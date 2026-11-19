@@ -18,13 +18,13 @@ and 3 seconds is about how long a person waits for an answer to start before the
 <tr><td>askalinaw-http-5xx</td><td>Any 5xx response</td><td>Check app logs</td></tr>
 <tr><td>askalinaw-slow-responses</td><td>Average response &gt; 3 s over 5 min</td><td>Check model latency vs server load</td></tr>
 <tr><td>askalinaw-site-down</td><td>Health check can't load the site twice</td><td>Check Caddy and containers</td></tr>
-<tr><td>askalinaw-answers-failed</td><td>3 wrong/failed answers in 15 min</td><td>System is up but not useful: check the Gemini key/quota and the handbook</td></tr>
+<tr><td>askalinaw-answers-failed</td><td>2 failed hourly answer checks in a row</td><td>System is up but not useful: check the Gemini key/quota and the handbook</td></tr>
 <tr><td>askalinaw-empty-answer</td><td>Any empty answer</td><td>Content missing or model blocked</td></tr>
 <tr><td>askalinaw-backup-failed</td><td>Nightly backup failed</td><td>Run <code>backup.sh</code> by hand, read its log</td></tr>
 </table>
 <figure><img src="img/e07-alarms.png" alt="CloudWatch alarms list"><figcaption>E-07 · All 10 alarms, all sending to SNS topic askalinaw-alerts, on 17 Nov 2026 at about 17:00 Manila. <code>askalinaw-answers-failed</code> is in ALARM: since 07:01 UTC the hourly answer check has been getting HTTP 503 "Service Unavailable" (and earlier 429) from the Gemini API, while the site itself stayed up. This is the alarm doing its job: it caught a problem on the model provider's side that a simple "is the site up" check would miss.</figcaption></figure>
 <figure><img src="img/sns-confirmed.png" alt="SNS subscription confirmed"><figcaption>SNS email subscription to <code>askalinaw-alerts</code> confirmed.</figcaption></figure>
-<figure><img src="img/e08-alert-email.png" alt="Alarm email"><figcaption>E-08 · Alert received by FILL-IN at FILL-IN date/time.</figcaption></figure>
+<figure><img src="img/e08-alert-email.png" alt="Alarm email"><figcaption>E-08 · Real alert received by Ivan: "ALARM: askalinaw-answers-failed", 02:02 on 17 Nov 2026 (see Incident INC-02).</figcaption></figure>
 <p><b>Request logging:</b> Caddy writes one JSON line per request (time, method, path, status, duration), shipped to
 <code>/askalinaw/access</code> (14-day retention). LibreChat's own log, which includes the question text and errors, goes to
 <code>/askalinaw/app</code>. The version that answered is the git commit, set as <code>APP_VERSION</code> at deploy. The health check
@@ -42,15 +42,15 @@ also records the model's answer time.</p>
 <li><b>The server itself</b>: rebuilt by <code>infra/01-create-aws.sh</code> plus <code>infra/02-server-setup.sh</code>.</li>
 </ol>
 <p>We run MongoDB in a container, not RDS, so the brief's option is "a scheduled dump to S3 kept at least 7 days". Ours are kept 14.</p>
-<figure><img src="img/e10-backups.png" alt="Backups in S3"><figcaption>E-10 · Nightly dumps in S3, and bucket versioning enabled.</figcaption></figure>
-<figure><img src="img/e11-restore.png" alt="Restore test output"><figcaption>E-11 · Restore test on FILL-IN-DATE: counts before → empty → after restore, then a successful login to an old conversation.</figcaption></figure>
+<figure><img src="img/e10-backups.png" alt="Backups in S3"><figcaption>E-10 · Left: the two automatic nightly dumps in <code>backups/mongo/</code>, written at 02:00 Manila on 18 and 19 Nov 2026. Right: Bucket Versioning: Enabled.</figcaption></figure>
+<figure><img src="img/e11-restore.png" alt="Restore test output"><figcaption>E-11 · Restore test on 18 Nov 2026, from the automatic 02:00 backup: counts before → empty → after restore, then a successful login to an old conversation.</figcaption></figure>
 <p><b>RPO and RTO.</b> We could lose up to <b>24 hours</b> of conversations, because backups run nightly. Measured: getting the database
-back from S3 took <b>FILL-IN seconds</b>; rebuilding the whole server from scratch and restoring would take about <b>FILL-IN minutes</b>.</p>
+back from S3 took <b>31 seconds</b>; rebuilding the whole server from scratch and restoring would take about <b>25 minutes</b> (estimated: about 5 minutes for 01-create-aws.sh, about 15 for the server to install itself, then the 31 s restore; not measured).</p>
 
 <h2 id="security">Security</h2>
 <table>
 <tr><th>Problem at baseline</th><th>What we did</th><th>Risk it addresses</th></tr>
-<tr><td>Shared/unprotected console logins</td><td>Each of us has our own IAM user with MFA</td><td>A stolen password alone can't get into the account, and we can tell who did what.</td></tr>
+<tr><td>Shared/unprotected console logins</td><td>Each of us signs in with our own AWS Builder ID with MFA, invited to the project team</td><td>A stolen password alone can't get into the account, and we can tell who did what.</td></tr>
 <tr><td>Keys in a plain .env file</td><td>All secrets in Parameter Store (SecureString), written to an <code>.env</code> with chmod 600 on the server at start-up; git history checked</td><td>Keys can't leak through GitHub, screenshots or a copied folder.</td></tr>
 <tr><td>SSH open to the internet</td><td>No port 22, no key pair; shell through Session Manager</td><td>Removes the most-scanned door on the internet.</td></tr>
 <tr><td>Database reachable?</td><td>MongoDB is only on Docker's internal network; security group allows 80/443 only</td><td>Nobody outside can talk to the database.</td></tr>
@@ -61,6 +61,7 @@ back from S3 took <b>FILL-IN seconds</b>; rebuilding the whole server from scrat
 <tr><td>Personal data to a third party</td><td>All data invented; prompt tells the assistant not to ask for personal info</td><td>Nothing personal reaches Google.</td></tr>
 <tr><td>Gemini key scope</td><td>Key restricted to the Generative Language API in Google AI Studio, deleted at end of term</td><td>A leaked key can't be used for other Google services.</td></tr>
 </table>
+<p><b>Still open:</b> both team members have full developer access through the team invite, wider than least privilege. We accepted it for a two-person student project.</p>
 <figure><img src="img/e12-mfa.png" alt="IAM users with MFA"><figcaption>E-12 · Each of us signs in with our own AWS login (AWS Builder ID, added as a separate member of the project) and each login has its own authenticator-app MFA device. No shared logins. 17 Nov 2026.</figcaption></figure>
 <figure><img src="img/e12-users.png" alt="Project members"><figcaption>E-12 · The AWS project has two separate members, Ivan (owner) and Robert, each with their own login. Emails blurred.</figcaption></figure>
 <figure><img src="img/e13-parameters.png" alt="Parameter Store"><figcaption>E-13 · Parameter Store, 17 Nov 2026: every secret is a SecureString and values are not shown; non-secret settings (bucket, domain, Caddyfile) are plain String.</figcaption></figure>

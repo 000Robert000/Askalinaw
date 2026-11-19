@@ -10,9 +10,9 @@
 <tr><td>Script</td><td><code>scripts/backup.sh</code></td><td><code>scripts/healthcheck.sh</code> + <code>ask_model.py</code></td></tr>
 <tr><td>Schedule</td><td>cron, 02:00 Manila every night</td><td>cron, every 5 minutes (site); the AI answer check runs on the first run of each hour</td></tr>
 <tr><td>What it does</td><td>Dumps MongoDB, archives config, uploads both to S3, reports BackupFailed 0/1</td><td>Loads the site and reports SiteDown; once an hour asks the model a question with a known answer and reports AnswersFailed, EmptyAnswer, AnswerLatencyMs</td></tr>
-<tr><td>Ran unattended at</td><td>FILL-IN, FILL-IN, FILL-IN</td><td>FILL-IN first … FILL-IN last (FILL-IN runs)</td></tr>
+<tr><td>Ran unattended at (Manila time)</td><td>18 Nov 02:00, 19 Nov 02:00</td><td>17 Nov 01:50 first … 19 Nov 18:20 last (782 runs)</td></tr>
 </table>
-<figure><img src="img/e14-automation.png" alt="Automation log"><figcaption>E-14 · <code>/askalinaw/automation</code> log: timestamped lines from both jobs on different days, with nobody logged in.</figcaption></figure>
+<figure><img src="img/e14-automation.png" alt="Automation log"><figcaption>E-14 · Logs Insights on <code>/askalinaw/automation</code>, last 4 days: the two <code>backup.sh</code> runs, 17 Nov 18:00 UTC and 18 Nov 18:00 UTC (02:00 Manila), both "OK: backup … uploaded", with nobody logged in.</figcaption></figure>
 <p>Deploy instructions are in the repository <code>README.md</code>.</p>
 
 <h2>Incident INC-01: the disk filled up (18 Nov 2026)</h2>
