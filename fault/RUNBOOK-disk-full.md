@@ -1,6 +1,6 @@
 # RUNBOOK: Server disk full (askalinaw-disk-high)
 
-Owner: Santiago & Dequiros   Last tested: FILL-IN-DATE   Takes: ~15 minutes   Ask: Robert Santiago / Ivan Ray Dequiros
+Owner: Santiago & Dequiros   Last tested: 18 Nov 2026   Takes: ~15 minutes   Ask: Robert Santiago / Ivan Ray Dequiros
 
 ## 1. WHAT THIS IS FOR
 Getting Askalinaw working again when the server's root disk is full, and stopping it filling again.
@@ -81,4 +81,4 @@ If the database is damaged, follow the restore test: `/opt/askalinaw/scripts/res
 - Docker container logs live in `/var/lib/docker/containers/` — they are capped by our docker-compose.override.yml (10 MB × 3).
 
 ## 8. CHANGE HISTORY
-FILL-IN-DATE – Written after incident INC-01 (runaway debug log filled the disk).
+18 Nov 2026 – Written after incident INC-01 (runaway debug log filled the disk).

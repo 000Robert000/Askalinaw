@@ -4,12 +4,12 @@
 <body><main>
 <h1>Well-Architected review</h1>
 <p>We did this twice: a <b>first pass</b> right after the first deployment worked (2026-11-17), to decide what to build next,
-and an <b>after</b> pass once monitoring, backups, automation and the incident were done (FILL-IN-DATE). (E-17)</p>
+and an <b>after</b> pass once monitoring, backups, automation and the incident were done (20 Nov 2026). (E-17)</p>
 
 <h2>Operational Excellence</h2>
 <p><b>Asks for:</b> run and monitor the system, automate changes, learn from failures.</p>
 <p><b>First pass:</b> deployed by one script, with the dashboard and 10 alarms created at the same time. No runbook yet, no tested restore, and the two automations have not yet run unattended for two nights. <span class="adequate">Adequate</span></p>
-<p><b>After:</b> dashboard, 10 alarms, every request logged, two automations, one incident with a written root cause and a tested runbook. Deployment is a script, but it is not automatic from git. <span class="good">Good</span></p>
+<p><b>After:</b> dashboard, 10 alarms, every request logged, two automations, three incidents (one planned, two real) each with a written root cause, and a tested runbook. Deployment is a script, but it is not automatic from git. <span class="good">Good</span></p>
 
 <h2>Security</h2>
 <p><b>Asks for:</b> strong identity, least privilege, protected data, traceability.</p>
