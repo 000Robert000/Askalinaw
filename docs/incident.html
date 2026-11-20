@@ -66,6 +66,21 @@ and users get errors. Restarting alone would not have helped: the file would sti
 <figure><img src="img/e15-model-test.png" alt="Model test"><figcaption>The measurement behind the fix: flash timed out, flash-lite answered in 6.5 s.</figcaption></figure>
 <figure><img src="img/e15-429-fixed.png" alt="Fixed"><figcaption>After the fix: <code>answer=PASS</code>.</figcaption></figure>
 
+<h2>Incident INC-03: we deleted our own API key (20 Nov 2026, not planned)</h2>
+<p>A human error, found by testing and fixed with Parameter Store.</p>
+<table>
+<tr><th>When (Manila time)</th><th>What happened</th></tr>
+<tr><td>about 12:07</td><td>While checking the Gemini key in AI Studio, Ivan deleted it. Deleting it was meant for after grading.</td></tr>
+<tr><td>13:25</td><td><b>Noticed:</b> a test question on the site returned "status 401" (key not valid).</td></tr>
+<tr><td>about 13:30</td><td>Created a new key and stored it in Parameter Store from CloudShell. A first attempt from the server itself was refused: the server's role cannot change secrets, as designed.</td></tr>
+<tr><td>13:36</td><td>Health check with the new key: <code>site=200 answer=PASS</code>.</td></tr>
+<tr><td>13:37 to 13:57</td><td>The chat page still said "Unable to load this chat's model". We redeployed so LibreChat read the new key, and cleared the browser's stored site data.</td></tr>
+<tr><td>14:00</td><td><b>Fixed:</b> the chat answered again ("Registrar's Office: Mabini Hall, Room 101.").</td></tr>
+</table>
+<p><b>Time to detect:</b> about 78 min (no alarm fired; we found it by testing). <b>Time to fix:</b> 35 min.
+<b>Root cause:</b> a person deleted a production secret by mistake. <b>What helped:</b> the key lives only in Parameter Store, so replacing it was one command and a redeploy, with no code change and nothing in git.
+<b>What we learned:</b> our answer check runs hourly and needs two failed hours before it alarms, so a broken key can go unnoticed for up to two hours. A restart does not reload secrets; only a redeploy does.</p>
+
 <h2 id="runbook">Runbook: Server disk full</h2>
 <p>The full runbook is <a href="https://github.com/000Robert000/Askalinaw/blob/main/fault/RUNBOOK-disk-full.md">fault/RUNBOOK-disk-full.md</a>. Last tested 18 Nov 2026 (INC-01), took 3 minutes to fix and 5 more to install the prevention.</p>
 <pre>

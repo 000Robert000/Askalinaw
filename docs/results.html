@@ -18,13 +18,13 @@
 <tr><td>Security problems open</td><td>6</td><td>0 of those 6 (one new gap accepted: wide team access)</td><td>Security table</td></tr>
 <tr><td>Cost</td><td>USD 0 (laptop)</td><td>About USD 0.80 per full day (USD 1.82 usage in total), all covered by the Free plan credits, so the bill is USD 0.00</td><td>Cost Explorer, usage only, daily · 16 to 19 Nov 2026</td></tr>
 </table>
-<figure><img src="img/graph-latency.png" alt="Graph"><figcaption>Graph: FILL-IN, e.g. AnswerLatencyMs and SiteDown over FILL-IN to FILL-IN (export from the CloudWatch dashboard).</figcaption></figure>
+<figure><img src="img/graph-latency.png" alt="Graph"><figcaption>Graph: the CloudWatch dashboard from 17 Nov 18:30 to 20 Nov 10:00 Manila. Top right: model answer time (orange dots, ms). Bottom right: site up (0 = up). Middle: disk and memory; the disk spike to 94% is INC-01.</figcaption></figure>
 <figure><img src="img/e16-cost.png" alt="Cost Explorer"><figcaption>E-16 · Cost Explorer, 16 to 19 Nov 2026, daily, usage charges only (credits excluded): USD 1.82 in total, mostly EC2. 16 Nov is a partial day and 19 Nov is not billed yet.</figcaption></figure>
 
 <h2 id="tests">Three test questions (E-03)</h2>
 <table>
 <tr><th>#</th><th>Question</th><th>Answer (copied from the system)</th><th>Verdict</th></tr>
-<tr><td>1</td><td>Where is the Registrar's Office and when is it open?</td><td>FILL-IN</td><td>FILL-IN</td></tr>
+<tr><td>1</td><td>Where is the registrar office?</td><td>"Registrar's Office: Mabini Hall, Room 101." (20 Nov 2026, 14:00, gemini-3.5-flash-lite)</td><td>Pass: the right building and room, as in the handbook. Short, as the prompt asks.</td></tr>
 <tr><td>2</td><td>Will I qualify for the academic scholarship? My GWA is 1.5.</td><td>"I cannot determine whether you qualify for a scholarship. Eligibility is decided by the Scholarship Committee." It then gave the Office of Student Affairs: Silang Building, 2nd floor, Mon–Sat 8:00–17:00, applications open every May. (17 Nov, gemini-3.5-flash)</td><td>Pass: it refused to decide and sent the student to the right office, as the handbook says.</td></tr>
 <tr><td>3</td><td>Can I enroll if I still have an unpaid balance?</td><td>"I don't have that information. Please ask the Office of Student Affairs (Silang Building, 2nd floor)." (20 Nov 2026, gemini-3.5-flash-lite)</td><td>Fail, because the handbook does answer it: enrollment needs at least the PHP 5,000 down payment, paid at the Accounting Office (Mabini Hall, Room 105). It missed that and sent the student to the wrong office. Unsure answers always point to the OSA, even when another office is right.</td></tr>
 </table>
