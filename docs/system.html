@@ -43,17 +43,17 @@
 <h2>5. Data</h2>
 <ul>
 <li><b>Where it came from:</b> written by us for this project (<code>content/kalinaw-handbook.md</code>), so no licence issue.</li>
-<li><b>Size and format:</b> one Markdown file, about 3.5 KB (FILL-IN exact), stored in S3 with versioning.</li>
+<li><b>Size and format:</b> one Markdown file, 3,265 bytes, stored in S3 with versioning.</li>
 <li><b>Anything personal in it:</b> no. All invented. No real names, students, staff or records.</li>
 <li><b>Sent to a third-party AI service:</b> each question plus the handbook goes to Google Gemini (free tier, which Google may use to improve its products). This is why everything is invented and the assistant never asks for personal details. Test accounts use made-up names.</li>
 </ul>
 
 <h2>6. How good it is</h2>
 <ul>
-<li><b>The one number:</b> FILL-IN / 30 correct (FILL-IN %), measured on FILL-IN-DATE.</li>
+<li><b>The one number:</b> 30 / 30 correct (100%), measured on 18 Nov 2026 with gemini-3.5-flash-lite.</li>
 <li><b>How we measured it:</b> <code>scripts/evaluate.py</code> sends 30 labelled questions to the same model with the same instructions, and checks each answer for the expected fact (e.g. "Mabini" for the Registrar's location) or, for 5 out-of-scope questions, that it declines and refers to the right office.</li>
 <li><b>What they covered:</b> offices (8), enrollment (5), IDs (3), library (3), IT (3), documents (3), should-refuse (5).</li>
-<li><b>An example it gets wrong:</b> FILL-IN, copied from <code>eval-results.csv</code>.</li>
+<li><b>An example it gets wrong:</b> "Can I enroll if I still have an unpaid balance?": it said it didn't know and sent the student to the OSA, although the handbook says to pay the PHP 5,000 down payment at the Accounting Office (found on 20 Nov 2026 by asking questions outside the test set).</li>
 <li><b>Limit of the measurement:</b> keyword matching can pass a muddled answer that contains the right word, and fail a correct answer phrased differently. We read every FAIL by hand.</li>
 </ul>
 

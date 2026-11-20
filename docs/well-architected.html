@@ -19,17 +19,17 @@ and an <b>after</b> pass once monitoring, backups, automation and the incident w
 <h2>Reliability</h2>
 <p><b>Asks for:</b> detect failure, recover automatically or quickly, test recovery.</p>
 <p><b>First pass:</b> a single server in one region and one Availability Zone. Nightly backups are scheduled but have not run yet, and restore is untested. <span class="gap">Gap</span></p>
-<p><b>After:</b> nightly backups, a restore tested in FILL-IN s, site check every 5 min, AI answer check every hour. Still a single server in a single Availability Zone: if it dies we restore by hand (RTO about FILL-IN min). <span class="adequate">Adequate</span></p>
+<p><b>After:</b> nightly backups, a restore tested in 31 s, site check every 5 min, AI answer check every hour. Still a single server in a single Availability Zone: if it dies we restore by hand (RTO about 25 min, estimated: rebuild the server, then the 31 s restore). <span class="adequate">Adequate</span></p>
 
 <h2>Performance Efficiency</h2>
 <p><b>Asks for:</b> the right resource size, measured.</p>
 <p><b>First pass:</b> t3.small, the largest free-tier-eligible type with enough memory (plus 2 GB swap). Sydney is farther from the Philippines than Singapore, but the account's service control policy only allows ap-southeast-2. Not yet measured. <span class="adequate">Adequate</span></p>
-<p><b>After:</b> average CPU FILL-IN %, memory FILL-IN %, average model answer time FILL-IN ms over FILL-IN-DATES. FILL-IN: "right-sized" or "could drop to t3.small". <span class="adequate">Adequate</span></p>
+<p><b>After:</b> average CPU FILL-IN %, memory FILL-IN %, average model answer time FILL-IN ms over FILL-IN-DATES. FILL-IN: "right-sized" or "could drop to t3.micro". <span class="adequate">Adequate</span></p>
 
 <h2>Cost Optimization</h2>
 <p><b>Asks for:</b> pay only for what you use, and know what you pay.</p>
 <p><b>First pass:</b> Free plan credits, a USD 30 monthly budget alert from day one, tags on everything. <span class="adequate">Adequate</span></p>
-<p><b>After:</b> about FILL-IN USD/day. No idle resources except the Elastic IP, which is billed whether used or not. Free model tier. <span class="good">Good</span></p>
+<p><b>After:</b> about 0.45 USD/day (16 to 19 Nov). No idle resources except the Elastic IP, which is billed whether used or not. Free model tier. <span class="good">Good</span></p>
 
 <h2>Sustainability</h2>
 <p><b>Asks for:</b> the smallest footprint that does the job.</p>

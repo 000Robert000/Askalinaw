@@ -28,7 +28,7 @@
 <h2>Use of AI tools</h2>
 <p>We used <b>Claude (Anthropic)</b> to draft the deployment, backup, health-check, evaluation and fault-injection scripts,
 the AWS setup script, the invented handbook, and first drafts of the text on this website. We ran every script ourselves in
-our AWS account, fixed what didn't work (FILL-IN: list what you changed), and checked every claim on this site against our own
+our AWS account, fixed what didn't work (we moved the deployment to ap-southeast-2 when the account's service control policy blocked every other region; changed t3.medium to t3.small for the Free plan; fixed the branding script, which picked LibreChat's new admin-panel image instead of the app; changed the model twice after Google retired gemini-2.5-flash and gemini-3.5-flash timed out on the free tier; made the AI health check hourly after it used up the free quota; and added a second debug file when the fault script stopped at 77%), and checked every claim on this site against our own
 screenshots, logs and console. All evidence and numbers come from our running system.</p>
 
 <h2>Signed</h2>

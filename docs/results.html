@@ -15,7 +15,7 @@
 <tr><td>Time to detect full disk</td><td>Never</td><td>13 min (6 min after passing 85%)</td><td>INC-01 · 18 Nov 2026</td></tr>
 <tr><td>Data we could lose (RPO)</td><td>Everything</td><td>≤ 24 h</td><td>Backup schedule</td></tr>
 <tr><td>Time to restore DB (RTO)</td><td>Impossible</td><td>31 s</td><td>restore-test.sh · 18 Nov 2026</td></tr>
-<tr><td>Security problems open</td><td>6</td><td>FILL-IN</td><td>Security table</td></tr>
+<tr><td>Security problems open</td><td>6</td><td>0 of those 6 (one new gap accepted: wide team access)</td><td>Security table</td></tr>
 <tr><td>Cost</td><td>USD 0 (laptop)</td><td>About USD 0.80 per full day (USD 1.82 usage in total), all covered by the Free plan credits, so the bill is USD 0.00</td><td>Cost Explorer, usage only, daily · 16 to 19 Nov 2026</td></tr>
 </table>
 <figure><img src="img/graph-latency.png" alt="Graph"><figcaption>Graph: FILL-IN, e.g. AnswerLatencyMs and SiteDown over FILL-IN to FILL-IN (export from the CloudWatch dashboard).</figcaption></figure>
@@ -26,7 +26,7 @@
 <tr><th>#</th><th>Question</th><th>Answer (copied from the system)</th><th>Verdict</th></tr>
 <tr><td>1</td><td>Where is the Registrar's Office and when is it open?</td><td>FILL-IN</td><td>FILL-IN</td></tr>
 <tr><td>2</td><td>Will I qualify for the academic scholarship? My GWA is 1.5.</td><td>"I cannot determine whether you qualify for a scholarship. Eligibility is decided by the Scholarship Committee." It then gave the Office of Student Affairs: Silang Building, 2nd floor, Mon–Sat 8:00–17:00, applications open every May. (17 Nov, gemini-3.5-flash)</td><td>Pass: it refused to decide and sent the student to the right office, as the handbook says.</td></tr>
-<tr><td>3</td><td>FILL-IN: a harder question outside the 30, that it got wrong</td><td>FILL-IN</td><td>Fail, because FILL-IN</td></tr>
+<tr><td>3</td><td>Can I enroll if I still have an unpaid balance?</td><td>"I don't have that information. Please ask the Office of Student Affairs (Silang Building, 2nd floor)." (20 Nov 2026, gemini-3.5-flash-lite)</td><td>Fail, because the handbook does answer it: enrollment needs at least the PHP 5,000 down payment, paid at the Accounting Office (Mabini Hall, Room 105). It missed that and sent the student to the wrong office. Unsure answers always point to the OSA, even when another office is right.</td></tr>
 </table>
 
 <h2>Quality measurement (E-04)</h2>
@@ -39,6 +39,7 @@
 <li><b>Move the database off the server</b> (DocumentDB or MongoDB Atlas) and run the app in an Auto Scaling group of one. This fixes our biggest Reliability gap.</li>
 <li><b>Deploy automatically from GitHub</b> (GitHub Actions running <code>deploy.sh</code> through SSM Run Command) so every change is tested and logged.</li>
 <li><b>Close open registration</b>: invite-only accounts or campus email domain only.</li>
+<li><b>Fix the fallback answer</b>: when unsure, point to the office that handles the topic (Accounting for payments, the Library for library hours), not always the OSA, and add an unpaid-balance question to evaluate.py.</li>
 <li><b>Run evaluate.py nightly</b> and alarm if the score drops, so handbook edits can't silently break answers.</li>
 <li><b>Stop the server outside class hours</b> with an EventBridge schedule, roughly halving cost and footprint.</li>
 </ol>

@@ -22,7 +22,7 @@
 <tr><td>18:18</td><td>The script stopped at 77%: <code>fallocate</code> could not grow the one file any further. We added a second 5 GB debug log (<code>chat-debug.2.log</code>) to carry the same fault past the alarm line.</td></tr>
 <tr><td>18:21</td><td>Disk passed 85% (first 5-minute average: 85.006%). It went on to 94% (29 of 30 GB used).</td></tr>
 <tr><td>18:26</td><td><b>Noticed:</b> email "ALARM: askalinaw-disk-high" (alarm state change 18:26:53).</td></tr>
-<tr><td>18:27</td><td>Site: FILL-IN (what you saw when you tried a chat at 94%).</td></tr>
+<tr><td>18:27</td><td>Site: not tested at 94%; 1.9 GB was still free, so chats still saved.</td></tr>
 <tr><td>18:29</td><td><b>Fixed:</b> both debug logs truncated, disk back to 37%, LibreChat and MongoDB restarted, all containers Up.</td></tr>
 <tr><td>18:31</td><td><b>Prevented:</b> log rotation installed and tested (see below).</td></tr>
 </table>

@@ -26,20 +26,20 @@ See <a href="baseline.html">Baseline</a>.</p>
 <h2>What we changed</h2>
 <ul>
 <li><b>We can see it:</b> a dashboard, 10 alarms that email both of us, and a log line for every request.</li>
-<li><b>We can recover it:</b> a nightly database backup to S3, versioned content, and a restore we actually tested (FILL-IN seconds).</li>
+<li><b>We can recover it:</b> a nightly database backup to S3, versioned content, and a restore we actually tested (31 seconds).</li>
 <li><b>It's locked down:</b> MFA, own logins, no SSH port, secrets in Parameter Store, least-privilege permissions, encrypted disk.</li>
 <li><b>It looks after itself:</b> two automations (nightly backup, and a health check every 5 minutes that also tests an AI answer every hour) that run with nobody touching them.</li>
-<li><b>We broke it on purpose:</b> filled the disk, got alerted in FILL-IN minutes, fixed it, found the root cause, and added prevention.</li>
+<li><b>We broke it on purpose:</b> filled the disk, got alerted in 13 minutes, fixed it, found the root cause, and added prevention.</li>
 </ul>
 
 <h2>What improved</h2>
 <table>
 <tr><th>Measure</th><th>Before</th><th>After</th></tr>
-<tr><td>Time to notice a full disk</td><td>Never (no alerts)</td><td>FILL-IN min</td></tr>
+<tr><td>Time to notice a full disk</td><td>Never (no alerts)</td><td>13 min</td></tr>
 <tr><td>Data lost if the server dies</td><td>Everything</td><td>At most 24 h (nightly backup)</td></tr>
-<tr><td>Security problems found</td><td>FILL-IN</td><td>FILL-IN fixed</td></tr>
-<tr><td>Answer quality</td><td>Not measured</td><td>FILL-IN / 30 correct</td></tr>
-<tr><td>Cost per day</td><td>FILL-IN</td><td>FILL-IN</td></tr>
+<tr><td>Security problems found</td><td>6</td><td>6 fixed</td></tr>
+<tr><td>Answer quality</td><td>Not measured</td><td>30 / 30 correct</td></tr>
+<tr><td>Cost per day</td><td>USD 0 (laptop)</td><td>about USD 0.45 (16 to 19 Nov)</td></tr>
 </table>
 <p>Full numbers with dates: <a href="results.html">Results</a>.</p>
 </main><script src="nav.js"></script></body></html>
